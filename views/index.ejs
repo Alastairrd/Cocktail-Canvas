@@ -5,7 +5,36 @@
     <link rel="stylesheet"  type="text/css" href="/main.css" />
   </head>
   <body>
-    <h1>Welcome to <%=appData.appName%></h1>
+    <!--top nav header with login bar based on session data-->
+    <header>
+      <nav class="topnav">
+        <ul>
+          <li><a class="active" href="./"><%=appData.appName%></a></li>
+          <li><a href="list">Lists</a></li> <!--todo-->
+          <li><a href="search">Search</a></li> <!--todo-->
+          <li><a href="menus/create">Create</a></li>
+          <li><a href="about">About</a></li>
+        </ul>
+        <!--if no user, show login-->
+        <% if(user == null){ %>
+        <div class="account" id="login">
+          <ul>
+            <li><a href="users/login">Log in</a></li>
+          </ul>
+        </div>
+        <!--if user exists, show logout-->
+        <% } else { %>
+        <div class="account" id="logout">
+          <ul>
+            <li><a href="logout">Logout</a></li>
+          </ul>
+        </div>
+        <% } %>
+      </nav>
+    </header>
+    <% if(user != null) { %>
+      <h2>Welcome back <%=user%>!</h2>
+    <% } %>
     <p><a href="about">About <%=appData.appName%></a></p>
     <p><a href="users/register">Register with us</a></p>
     <p><a href="users/login">Login with us</a></p>

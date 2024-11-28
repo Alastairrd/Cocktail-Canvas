@@ -22,38 +22,80 @@ router.get("/list", redirectLogin, function (req, res, next) {
 });
 
 router.get("/login", function (req, res, next) {
-	res.render("login.ejs");
+	let sessionData = {
+		loginFailed: false,
+		user: req.session.user,
+	};
+	res.render("login.ejs", sessionData);
 });
 
-router.post("/loggedin", function (req, res, next) {
+router.post("/login", async function (req, res, next) {
+	//variable set up for login validation
 	const username = req.body.username;
 	const password = req.body.password;
 
-	// Save user session here, when login is successful
-	req.session.userId = username;
+	let params = [username, password];
+	let sqlquery = "SELECT user_id, hashedPassword FROM users WHERE username = ?";
 
-	let sqlquery = "SELECT hashedPassword FROM users WHERE username = ?";
+	//check if username is registered
+	const results = await new Promise((resolve, reject) => {
+		db.query(sqlquery, params, (error, results) => {
+			if (error) {
+				reject(error);
+			} else {
+				resolve(results);
+			}
+		});
+	});
 
-	db.query(sqlquery, username, (err, result) => {
-		if (err) {
-			err(next);
-		}
-
-		hashedPassword = result[0].hashedPassword;
+	//if no user found for that username
+	if (results.length == 0) {
+		//redirect back to login page, display error message saying there is no matching user
+		let sessionData = {
+			loginFailed: true,
+			user: req.session.user,
+		};
+		res.render("login.ejs", sessionData);
+	} else {
+		//get hashedPassword from returned user data
+		hashedPassword = results[0].hashedPassword;
 
 		// Compare the password supplied with the password in the database
 		bcrypt.compare(password, hashedPassword, function (err, result) {
 			if (err) {
-				res.render("loggedin.ejs", {
-					loginResult: "Look there was a bit of an error tbh",
-				});
+				let sessionData = {
+					loginFailed: false,
+					user: req.session.user,
+				};
+				res.render("login.ejs", sessionData);
 			} else if (result == true) {
-				res.render("loggedin.ejs", { loginResult: "Yeah ya good" });
+				// regenerate the session, which is good practice to help
+				// guard against forms of session fixation
+				req.session.regenerate(function (err) {
+					if (err) next(err);
+
+					// store user information in session, typically a user id
+					req.session.user = username;
+					req.session.user_id = results[0].user_id;
+
+					// save the session before redirection to ensure page
+					// load does not happen before session is saved
+					req.session.save(function (err) {
+						if (err) return next(err);
+						res.redirect("/");
+					});
+				});
 			} else {
-				res.render("loggedin.ejs", { loginResult: "Nah m8" });
+				//password comparison unsuccessful
+				let sessionData = {
+					loginFailed: true,
+					user: req.session.user,
+				};
+				//redirect to login page
+				res.render("login.ejs", sessionData);
 			}
 		});
-	});
+	}
 });
 
 router.post(
@@ -71,7 +113,6 @@ router.post(
 			console.log(errors);
 			res.redirect("./register");
 		} else {
-			
 			//salting and hashing password
 			const saltRounds = 10;
 			const plainPassword = req.body.password;

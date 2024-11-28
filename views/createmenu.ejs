@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Create Menu: <%=appData.appName%></title>
+    <link rel="stylesheet"  type="text/css" href="/main.css" />
+  </head>
+  <body>
+    <div>
+      <h1>Create a menu: <%=appData.appName%></h1>
+      <form method="POST" action="create">
+        <p>Menu name: <input id="menu_name" type="text" name="menu_name" value="" maxlength="50" /></p>
+        <p>Menu description: <input id="menu_desc" type="text" name="menu_desc" value="" maxlength="256" /></p>
+        <input type="submit" value="Create" />
+      </form>
+    </div>
+  </body>
+</html>

@@ -13,7 +13,7 @@ const app = express()
 const port = 8000
 
 global.redirectLogin = (req, res, next) => {
-    if (!req.session.userId ) {
+    if (!req.session.user) {
       res.redirect('../users/login') // redirect to the login page
     } else { 
         next (); // move to the next middleware function
@@ -44,9 +44,9 @@ app.use(session({
 // Define the database connection
 const db = mysql.createConnection ({
     host: 'localhost',
-    user: 'bettys_books_app',
-    password: 'qwertyuiop',
-    database: 'bettys_books'
+    user: 'cocktail_canvas_app',
+    password: 'password',
+    database: 'cocktail_canvas'
 })
 // Connect to the database
 db.connect((err) => {
@@ -69,8 +69,8 @@ const usersRoutes = require('./routes/users')
 app.use('/users', usersRoutes)
 
 // Load the route handlers for /menu
-const menuRoutes = require('./routes/menu')
-app.use('/menu', menuRoutes)
+const menusRoutes = require('./routes/menus')
+app.use('/menus', menusRoutes)
 
 // Load the route handlers for /cocktail
 const cocktailRoutes = require('./routes/cocktails')
