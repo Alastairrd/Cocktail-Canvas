@@ -87,18 +87,22 @@
 					</div>
 					<div id="current-list-div">
 						<ul>
-							<% for(i=0; i<menuList.length; i++) { %>
+							<% for(i=0; i<drinkList.length; i++) { %>
 								<li>
 									<div class="cocktail-item-div">
-										<p class="cocktail-item-name"><%=menuList[i].drink_name%></p>
-										<p class="cocktail-item-method"><%=menuList[i].drink_method%></p>
-										<p class="cocktail-item-glass"><%=menuList[i].drink_glass%></p>
-										<p class="cocktail-item-price"><%=menuList[i].drink_price%></p>
-										<ul class="cocktail-ingr-list">
-											<% for(i=0; i<menuList[i].ingredients.length; i++) { %>
-												<li class="ingredient-list-item">
-													<p><%=menuList[i].ingredients[i]%> : <%=menuList[i].measures[i]%></p>
-												</li>
+										<p class="cocktail-item-name"><%=drinkList[i].drink_name%></p>
+										<p class="cocktail-item-method"><%=drinkList[i].drink_method%></p>
+										<p class="cocktail-item-glass"><%=drinkList[i].drink_glass%></p>
+										<p class="cocktail-item-price"><%=drinkList[i].drink_price%></p>
+										<ul>
+											<% if (drinkList[i].ingredients && drinkList[i].measurements) { %>
+												<% for (let j = 0; j < drinkList[i].ingredients.length; j++) { %>
+													<li class="ingredient-list-item">
+														<p><%= drinkList[i].ingredients[j] %> : <%= drinkList[i].measurements[j] %></p>
+													</li>
+												<% } %>
+											<% } else { %>
+												<li>No ingredients or measurements found for this drink.</li>
 											<% } %>
 										</ul>
 									</div>

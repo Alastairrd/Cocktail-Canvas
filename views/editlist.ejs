@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Create Menu: <%=appData.appName%></title>
+    <link rel="stylesheet"  type="text/css" href="/main.css" />
+  </head>
+  <body>
+    <div>
+      <h1>List of your current menus: <%=appData.appName%></h1>
+      <h2>Pick one of your menus to edit!</h2>
+      <ul>
+        <% menuList.forEach(function(menu) { %>
+          <li>
+            <form action="/menus/editmenu" method="POST">
+                <label for="name">Menu Name: <%= menu.menu_name %></label>
+                <label for="desc">Menu Description: <%= menu.menu_desc %></label>
+              <input type="hidden" name="menu_id" value="<%= menu.menu_id %>">
+              <button type="submit">Edit Menu</button>
+            </form>
+          </li>
+        <% }) %>
+      </ul>
+    </div>
+  </body>
+</html>
