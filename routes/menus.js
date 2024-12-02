@@ -74,10 +74,6 @@ router.post("/editmenu", redirectLogin, async function (req, res, next) {
 	});
 
     let menuData = { drinkList: resDrinkList, menu_id: menuId }
-    console.log(menuData);
-    console.log(menuData.drinkList);
-    console.log(menuData.drinkList[0].ingredients[0]);
-
 	res.render(
 		"editmenu.ejs", menuData);
 });

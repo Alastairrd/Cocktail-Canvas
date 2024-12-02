@@ -3,6 +3,7 @@
 	<head>
 		<title>Create Menu: <%=appData.appName%></title>
 		<link rel="stylesheet" type="text/css" href="/main.css" />
+		<script src="/scripts.js"></script>
 	</head>
 	<body>
 		<div>
@@ -111,9 +112,14 @@
 						</ul>
 					</div>
 				</div>
+				<!--cocktail db API search section-->
 				<div id="search-list-container">
 					<div id="search-div">
-				
+						<!--fetch function to get api data for cokctail search-->
+						<form id="cocktailAPISearch" onsubmit="cocktailDBFetch(event)">
+							<input type="text" id="keyword" placeholder="Search for a cocktail" required>
+							<button type="submit">Search</button>
+						</form>
 					</div>
 					<div id="result-list-div">
 				
