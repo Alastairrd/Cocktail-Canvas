@@ -78,8 +78,6 @@ a:link {
   }
   
   /* selected link */
-  a:active {
-    color: blue;
-    text-decoration: none;
-    padding:5px;
+  .active {
+    background-color: #000;
   }

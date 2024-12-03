@@ -61,8 +61,8 @@ router.post("/editmenu", redirectLogin, async function (req, res, next) {
 				drink_id: entry.drink_id,
 				drink_name: entry.drink_name,
 				drink_method: entry.drink_method,
-				glass_name: entry.glass_name,
-				price: entry.price,
+				drink_glass: entry.glass_name,
+				drink_price: entry.price,
 				ingredients: [entry.ingr_name],
 				measurements: [entry.measure],
 			});
