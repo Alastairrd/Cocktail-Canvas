@@ -146,10 +146,17 @@ function listParsedResults(resultList){
             const ingrMeasureListItem = document.createElement("li");
             ingrMeasureListItem.classList.add("ingredient-list-item");
             //text item for ingredient and measurement
-            const ingrMeasurePairText = document.createElement("p");
-            ingrMeasurePairText.innerText = `${result.ingredients[i]} : ${result.measurements[i]}`
+            const ingredientText = document.createElement("p");
+            ingredientText.innerText = `${result.ingredients[i]}`
+			const joinText = document.createElement("p");
+            joinText.innerText = ` : `
+			const measureText = document.createElement("p");
+            measureText.innerText = `${result.measurements[i]}`
             //append text to list item
-            ingrMeasureListItem.appendChild(ingrMeasurePairText);
+            ingrMeasureListItem.appendChild(ingredientText);
+			ingrMeasureListItem.appendChild(joinText);
+            ingrMeasureListItem.appendChild(measureText);
+            
             //append list item to container
             ingredientList.appendChild(ingrMeasureListItem);
         }
@@ -224,6 +231,9 @@ async function addCocktailToDBFromSearch(event, price){
 	//TWO P TAGS, ONE FOR INGR AND ONE FOR MEASURE
 
 	//THEN LOOP THROUGH THE UL for the INGREDIENTS AND MEASURES INTO ARRAY
+	children[3].forEach(listItem => {
+		console.log(listItem);
+	});
 
 	// try {
 	// 	//reponse is equal to the result of the promise

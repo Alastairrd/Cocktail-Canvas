@@ -138,6 +138,7 @@ router.post(
 
 		let menuData = { menu_id: menuId };
 
+		//TODO THIS NEEDS TO BE CHANGED TO A FETCH POST REQUEST SO WE CAN SEND DATA
 		res.render("editmenu.ejs", menuData);
 	}
 );
