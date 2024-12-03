@@ -166,16 +166,94 @@ function listParsedResults(resultList){
         ingredientList.appendChild(ingrMeasureListItem);
     }
 
+	const addButton = document.createElement('button');
+	addButton.textContent = "Add to menu";
+	addButton.addEventListener('click', getPrice)
+	
+
+	
+
     //append to parent
     resultDiv.appendChild(resultName);
     resultDiv.appendChild(resultMethod);
     resultDiv.appendChild(resultGlass);
     resultDiv.appendChild(resultPrice);
     resultDiv.appendChild(ingredientList);
+	resultDiv.appendChild(addButton);
 
     //apend to container
     listContainer.appendChild(resultDiv);
     });
+}
+
+function getPrice(event){
+	
+
+	const userInput = prompt("Enter a price:");
+	if(isNaN(userInput)){
+		alert("That's not a number!");
+		return;
+	}
+	const parsedInput = parseFloat(userInput);
+
+	if(parsedInput !== null && parsedInput >= 0 && parsedInput <= 99999.99){
+		addCocktailToDBFromSearch(event, parsedInput)
+
+	} else {
+		alert("No price entered or price is outside of allowable range.")
+		return;
+	}
+}
+
+async function addCocktailToDBFromSearch(event, price){
+	const button = event.target;
+	const parent = button.parentNode;
+	const children = parent.children;
+	
+	console.log(children);
+	const data = {
+		drink_name: children[0].innerText,
+		drink_method: children[1].innerText,
+		drink_glass: children[2].innerText,
+		drink_price: price,
+		ingredients: [],
+		measurements: []
+	}
+
+	//TODO NEED TO SEPERATE MEASUREMENT FROM INGREDIENT IN RESULT LISTING, OR DELIMIT IT, BUT SEPERATION PROBABLY EASIER
+	//TWO P TAGS, ONE FOR INGR AND ONE FOR MEASURE
+
+	//THEN LOOP THROUGH THE UL for the INGREDIENTS AND MEASURES INTO ARRAY
+
+	// try {
+	// 	//reponse is equal to the result of the promise
+	// 	const response = await fetch("../add-cocktail-to-menu", {
+	// 		method: "POST",
+
+	// 		body: data
+	// 	});
+
+	// 	//if all went well, say so
+	// 	if (response.ok == true) {
+	// 		console.log(
+	// 			"Data calculated successfully, code: " + response.status
+	// 		);
+	// 		//returned summed matrix
+	// 		summedMatrix = await response.json();
+	// 	} else {
+	// 		//if database request didnt go well
+	// 		console.log(
+	// 			"No bueno calcing that data chief, CODE: " +
+	// 				response.status +
+	// 				", text: " +
+	// 				response.statusText
+	// 		);
+	// 	}
+
+	// 	//else oh no, tell us what went wrong
+	// } catch (error) {
+	// 	console.error(error);
+	// }
 }
 
 

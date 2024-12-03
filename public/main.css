@@ -77,7 +77,3 @@ a:link {
     padding:5px;
   }
   
-  /* selected link */
-  .active {
-    background-color: #000;
-  }
