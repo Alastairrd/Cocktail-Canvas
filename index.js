@@ -26,6 +26,9 @@ app.set('view engine', 'ejs')
 // Set up the body parser 
 app.use(express.urlencoded({ extended: true }))
 
+//middleware for parsing json in body
+app.use(express.json());
+
 // Set up public folder (for css)
 app.use(express.static(__dirname + '/public'))
 // Set up scripts folder (for scripts)

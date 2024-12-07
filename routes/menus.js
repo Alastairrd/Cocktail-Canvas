@@ -33,8 +33,28 @@ router.post("/create", redirectLogin, async function (req, res, next) {
 	res.redirect("/editlist");
 });
 
-router.post("/editmenu", redirectLogin, async function (req, res, next) {
-	const menuId = req.body.menu_id;
+router.get("/editmenu", redirectLogin, async function (req, res, next) {
+	const menuId = req.query.menu_id;
+
+	const sqlQuery = `CALL check_menu_against_user(?,?)`;
+	let params = [menuId, req.session.user_id]
+	checkResults = await new Promise((resolve, reject) => {
+		db.query(sqlQuery, params, (error, results) => {
+			if (error) {
+				reject(error);
+			} else {
+				resolve(results);
+			}
+		});
+	});
+
+	//if not owner of menu
+	if(!checkResults[0][0].is_owner){
+		res.render('error.ejs', {message: "Menu does not belong to this user."})
+		return;
+	}
+
+	//else is owner of menu
 	const menuSqlQuery = `CALL get_current_drink_list(?)`;
 	results = await new Promise((resolve, reject) => {
 		db.query(menuSqlQuery, menuId, (error, results) => {
@@ -103,6 +123,8 @@ router.post(
 	"/add-cocktail-to-menu",
 	redirectLogin,
 	async function (req, res, next) {
+		console.log("made it into request");
+		console.log(req.body);
 		//setup variables
 		const cocktailName = req.body.add_cocktail_name;
 		const cocktailMethod = req.body.add_cocktail_method;
@@ -125,6 +147,8 @@ router.post(
 			menuId,
 		];
 
+		console.log(params);
+
 		results = await new Promise((resolve, reject) => {
 			db.query(sqlquery, params, (error, results) => {
 				if (error) {
@@ -136,10 +160,7 @@ router.post(
 			});
 		});
 
-		let menuData = { menu_id: menuId };
-
-		//TODO THIS NEEDS TO BE CHANGED TO A FETCH POST REQUEST SO WE CAN SEND DATA
-		res.render("editmenu.ejs", menuData);
+		res.redirect(`/menus/editmenu?menu_id=${menuId}`)
 	}
 );
 

@@ -11,7 +11,7 @@
       <ul>
         <% menuList.forEach(function(menu) { %>
           <li>
-            <form action="/menus/editmenu" method="POST">
+            <form action="/menus/editmenu" method="GET">
                 <label for="name">Menu Name: <%= menu.menu_name %></label>
                 <label for="desc">Menu Description: <%= menu.menu_desc %></label>
               <input type="hidden" name="menu_id" value="<%= menu.menu_id %>">

@@ -104,6 +104,7 @@ router.post(
 		check("email").isEmail(),
 		check("password").isLength({ min: 8, max: 24 }).notEmpty(),
 		check("username").isLength({ min: 8, max: 16 }).notEmpty(),
+		check("company").isLength({ max: 64 }),
 		check("first").notEmpty(),
 		check("last").notEmpty(),
 	],
@@ -123,13 +124,14 @@ router.post(
 				function (err, hashedPassword) {
 					// Store hashed password in your database.
 					let sqlquery =
-						"INSERT INTO users (username, firstName, lastName, email, hashedPassword) VALUES (?,?,?,?,?)";
+						"INSERT INTO users (username, firstName, lastName, email, company, hashedPassword) VALUES (?,?,?,?,?,?)";
 					// execute sql query
 					let newrecord = [
 						req.sanitize(req.body.username),
 						req.sanitize(req.body.first),
 						req.sanitize(req.body.last),
 						req.body.email,
+						req.body.company,
 						hashedPassword,
 					];
 					db.query(sqlquery, newrecord, (err, result) => {
@@ -145,11 +147,7 @@ router.post(
 								" " +
 								req.sanitize(req.body.last) +
 								" you are now registered!  We will send an email to you at " +
-								req.body.email +
-								". Your password is: " +
-								req.body.password +
-								" and your hashed password is: " +
-								hashedPassword;
+								req.body.email
 						res.send(result);
 					});
 				}

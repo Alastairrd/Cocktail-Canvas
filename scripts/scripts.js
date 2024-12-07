@@ -134,8 +134,9 @@ function listParsedResults(resultList){
     resultGlass.innerText = "Glass: " + result.drink_glass;
 
     const resultPrice = document.createElement("p");
-    resultPrice.classList.add("cocktail-item-glass");
+    resultPrice.classList.add("cocktail-item-price");
     resultPrice.innerText = "Price: £" + result.drink_price;
+	resultPrice.style.display = "none";
 
     //create the ingredient/measure pair list container
     const ingredientList = document.createElement("ul");
@@ -164,12 +165,20 @@ function listParsedResults(resultList){
         //create list item for ingredient measurements
         const ingrMeasureListItem = document.createElement("li");
         ingrMeasureListItem.classList.add("ingredient-list-item");
-        //text item for ingredient and measurement
-        const ingrMeasurePairText = document.createElement("p");
-        ingrMeasurePairText.innerText = `No ingredients or measurements found for this drink.`
-        //append text to list item
-        ingrMeasureListItem.appendChild(ingrMeasurePairText);
-        //append list item to container
+
+		//text item for ingredient and measurement
+		const ingredientText = document.createElement("p");
+		ingredientText.innerText = `No ingredient found.`
+		const joinText = document.createElement("p");
+		joinText.innerText = ` : `
+		const measureText = document.createElement("p");
+		measureText.innerText = `No measurement found.`
+		//append text to list item
+		ingrMeasureListItem.appendChild(ingredientText);
+		ingrMeasureListItem.appendChild(joinText);
+		ingrMeasureListItem.appendChild(measureText);
+
+		//append list item to container
         ingredientList.appendChild(ingrMeasureListItem);
     }
 
@@ -216,54 +225,66 @@ async function addCocktailToDBFromSearch(event, price){
 	const button = event.target;
 	const parent = button.parentNode;
 	const children = parent.children;
+
+	const menu_id = document.getElementById("menu_id_holder").value;
 	
 	console.log(children);
 	const data = {
-		drink_name: children[0].innerText,
-		drink_method: children[1].innerText,
-		drink_glass: children[2].innerText,
-		drink_price: price,
+		add_cocktail_name: children[0].innerText,
+		add_cocktail_method: children[1].innerText,
+		add_cocktail_glass: children[2].innerText,
+		add_cocktail_price: price,
 		ingredients: [],
-		measurements: []
+		measurements: [],
+		menu_id: menu_id
 	}
 
 	//TODO NEED TO SEPERATE MEASUREMENT FROM INGREDIENT IN RESULT LISTING, OR DELIMIT IT, BUT SEPERATION PROBABLY EASIER
 	//TWO P TAGS, ONE FOR INGR AND ONE FOR MEASURE
 
 	//THEN LOOP THROUGH THE UL for the INGREDIENTS AND MEASURES INTO ARRAY
-	children[3].forEach(listItem => {
+	children[4].childNodes.forEach(listItem => {
 		console.log(listItem);
+		if(listItem.childNodes[0] && listItem.childNodes[2]){
+			data.ingredients.push(listItem.childNodes[0].innerText)
+			data.measurements.push(listItem.childNodes[2].innerText)
+		}
 	});
 
-	// try {
-	// 	//reponse is equal to the result of the promise
-	// 	const response = await fetch("../add-cocktail-to-menu", {
-	// 		method: "POST",
+	console.log(data);
 
-	// 		body: data
-	// 	});
+	try {
+		//reponse is equal to the result of the promise
+		const response = await fetch("/menus/add-cocktail-to-menu", {
+			method: "POST",
 
-	// 	//if all went well, say so
-	// 	if (response.ok == true) {
-	// 		console.log(
-	// 			"Data calculated successfully, code: " + response.status
-	// 		);
-	// 		//returned summed matrix
-	// 		summedMatrix = await response.json();
-	// 	} else {
-	// 		//if database request didnt go well
-	// 		console.log(
-	// 			"No bueno calcing that data chief, CODE: " +
-	// 				response.status +
-	// 				", text: " +
-	// 				response.statusText
-	// 		);
-	// 	}
+			headers: {
+				"Content-Type": "application/json",
+			},
 
-	// 	//else oh no, tell us what went wrong
-	// } catch (error) {
-	// 	console.error(error);
-	// }
+			body: JSON.stringify(data)
+		});
+
+		//if all went well, say so
+		if (response.ok == true) {
+			console.log(
+				"Cocktail data sent successfully, code: " + response.status
+			);
+			window.location.href = `/menus/editmenu?menu_id=${data.menu_id}`;
+		} else {
+			//if database request didnt go well
+			console.log(
+				"No bueno sending that cocktail chief, CODE: " +
+					response.status +
+					", text: " +
+					response.statusText
+			);
+		}
+
+		//else oh no, tell us what went wrong
+	} catch (error) {
+		console.error(error);
+	}
 }
 
 
