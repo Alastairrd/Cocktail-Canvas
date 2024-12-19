@@ -35,12 +35,14 @@ router.get("/users", async function (req, res, next) {
 		version: "0.1",
 		links: {
 			register: "https://doc.gold.ac.uk/usr/717/api/users/register",
-			register_info: "POST REQUEST // Required parameters: password (length 8 - 24), username (length 8 - 16) // Optional parameters: " +
-			"email: (valid, max length 320), company: (max length 64), first: (max length 20), last: (max length 30)",
-			find: "https://doc.gold.ac.uk/usr/717/api/users/find",
-			update: "https://doc.gold.ac.uk/usr/717/api/users/update",
-			delete: "https://doc.gold.ac.uk/usr/717/api/users/delete",
-			list: "https://doc.gold.ac.uk/usr/717/api/users/list"
+			register_info: "POST REQUEST // Required parameters: `password` (length 8 - 24), `username` (length 8 - 16) // Optional parameters: " +
+			"`email`: (valid, max length 320), `company`: (max length 64), `first`: (max length 20), `last`: (max length 30)",
+			search: "https://doc.gold.ac.uk/usr/717/api/users/search",
+			search_info: "GET REQUEST // Required parameters: `keyword` (max length 16)",
+			update: "https://doc.gold.ac.uk/usr/717/api/users/update", //todo
+			delete: "https://doc.gold.ac.uk/usr/717/api/users/delete", //todo need JWT?
+			list: "https://doc.gold.ac.uk/usr/717/api/users/list",
+			list_info: "GET REQUEST // Required parameters: N/A"
 		}
 	}
 
@@ -105,6 +107,28 @@ router.post(
 	}
 );
 
+//list all users
+router.get("/search", async function (req, res, next) {
+	let sqlquery = `CALL search_for_user(?)`;
+
+	results = await new Promise((resolve, reject) => {
+		db.query(sqlquery, req.query.keyword, (error, results) => {
+			if (error) {
+				reject(error);
+                res.json({error: error});
+			} else {
+				resolve(results);
+
+				let apiData = {
+					users: results[0],
+				};
+
+				res.json(apiData);
+			}
+		});
+	});
+});
+
 
 //list all users
 router.get("/listusers", async function (req, res, next) {
@@ -115,7 +139,7 @@ router.get("/listusers", async function (req, res, next) {
 		db.query(sqlquery, (error, results) => {
 			if (error) {
 				reject(error);
-                res.send("Error in API request from database.")
+                res.json({error: error})
 			} else {
 				resolve(results);
 

@@ -37,7 +37,7 @@ router.post("/searchresult", async function (req, res, next) {
 	}
 
 	if (sqlquery != "") {
-		params = req.body.query;
+		params = req.body.keyword;
 		const results = await new Promise((resolve, reject) => {
 			db.query(sqlquery, params, (error, results) => {
 				if (error) {
