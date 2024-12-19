@@ -119,6 +119,7 @@ router.get("/editlist", redirectLogin, async function (req, res, next) {
 	res.render("editlist.ejs", menuListData);
 });
 
+//route for adding a cocktail to menu either from custom creation or DB
 router.post(
 	"/add-cocktail-to-menu",
 	redirectLogin,
@@ -146,8 +147,6 @@ router.post(
 			jsonIngrMeas,
 			menuId,
 		];
-
-		console.log(params);
 
 		results = await new Promise((resolve, reject) => {
 			db.query(sqlquery, params, (error, results) => {
