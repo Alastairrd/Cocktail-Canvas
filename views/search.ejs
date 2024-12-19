@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Search: Cocktail Canvas<%=appData.appName%></title>
+    <link rel="stylesheet"  type="text/css" href="/main.css" />
+  </head>
+  <body>
+    <!--top nav header with login bar based on session data-->
+    <header>
+      <nav class="topnav">
+        <ul>
+          <li><a class="active" href="./"><%=appData.appName%></a></li>
+          <li><a href="list">Lists</a></li> <!--todo-->
+          <li><a href="search">Search</a></li> <!--todo-->
+          <li><a href="menus/editlist">Edit Menus</a></li> <!--todo-->
+          <li><a href="menus/create">Create</a></li>
+          <li><a href="about">About</a></li>
+        </ul>
+        <!--if no user, show login-->
+        <% if(user == null){ %>
+        <div class="account" id="login">
+          <ul>
+            <li><a href="users/login">Log in</a></li>
+          </ul>
+        </div>
+        <!--if user exists, show logout-->
+        <% } else { %>
+        <div class="account" id="logout">
+          <ul>
+            <li><a href="logout">Logout</a></li>
+          </ul>
+        </div>
+        <% } %>
+      </nav>
+    </header>
+    <% if(user != null) { %>
+      <h2>Welcome back <%=user%>!</h2>
+    <% } %>
+    <p>Search Cocktail Canvas:</p>
+    <p>What would you like to search for?</p>
+    <button onclick="setUserSearch()">User</button>
+    <button onclick="setMenuSearch()">Menu</button>
+    <button onclick="setDrinkSearch()">Drink</button>
+    <form id="searchForm" method="POST" action="searchresult">
+        <input id="type" name="type" value="" type="hidden">
+        <p id="searchLabel">Search for: <input id="searchQuery" type="text" name="query" placeholder="" maxlength="50" style="display: hidden"/></p>
+        <input type="submit" value="Search" />
+        
+    </form>
+  </body>
+</html>

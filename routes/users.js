@@ -1,9 +1,8 @@
 // Create a new router
-const { check, validationResult } = require("express-validator");
-
 const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
+const { check, validationResult } = require("express-validator");
 
 router.get("/register", function (req, res, next) {
 	res.render("register.ejs");

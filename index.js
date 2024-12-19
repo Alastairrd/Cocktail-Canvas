@@ -77,10 +77,6 @@ app.use('/users', usersRoutes)
 const menusRoutes = require('./routes/menus')
 app.use('/menus', menusRoutes)
 
-// Load the route handlers for /cocktail
-const cocktailRoutes = require('./routes/cocktails')
-app.use('/cocktails', cocktailRoutes)
-
 // Load the route handlers for /api
 const apiRoutes = require('./routes/api')
 app.use('/api', apiRoutes)
