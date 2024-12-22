@@ -3,6 +3,7 @@
   <head>
     <title>Search: Cocktail Canvas<%=appData.appName%></title>
     <link rel="stylesheet"  type="text/css" href="/main.css" />
+    <script src="/searchscripts.js"></script>
   </head>
   <body>
     <!--top nav header with login bar based on session data-->
@@ -43,8 +44,9 @@
     <button onclick="setDrinkSearch()">Drink</button>
     <form id="searchForm" method="POST" action="searchresult">
         <input id="type" name="type" value="" type="hidden">
-        <p id="searchLabel">Search for: <input id="searchQuery" type="text" name="keyword" placeholder="" maxlength="50" style="display: hidden"/></p>
-        <input type="submit" value="Search" />
+        <label id="searchLabel" style="display: none;">Search for: </label>  
+        <input id="searchQuery" type="text" name="keyword" placeholder="" maxlength="50" style="display: none;"/>
+        <input id="searchButton" type="submit" value="Search" style="display: none;"/>
         
     </form>
   </body>

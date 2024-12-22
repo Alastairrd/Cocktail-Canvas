@@ -107,7 +107,7 @@ router.post(
 	}
 );
 
-//list all users
+//user search
 router.get("/search", async function (req, res, next) {
 	let sqlquery = `CALL search_for_user(?)`;
 

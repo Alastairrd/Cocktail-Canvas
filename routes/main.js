@@ -11,6 +11,83 @@ router.get("/", function (req, res, next) {
 	res.render("index.ejs", sessionData);
 });
 
+router.get("/list", async function (req, res, next) {
+	let sqlquery = 'CALL get_all_users'; // query database to get all the books
+	const users = await new Promise((resolve, reject) => {
+		db.query(
+			sqlquery,
+			(error, results) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(results);
+				}
+			}
+		);
+	});
+
+	//return count of all menus
+	sqlquery = 'CALL get_all_menus' //todo
+	const menus = await new Promise((resolve, reject) => {
+		db.query(sqlquery, userId, (error, results) => {
+			if (error) {
+				reject(error);
+			} else {
+				resolve(results);
+			}
+		});
+	});
+
+	//return count of all menus
+	sqlquery = 'CALL get_all_drinks' //todo
+	let resDrinkList=[]
+	const drinks = await new Promise((resolve, reject) => {
+		db.query(sqlquery, userId, (error, results) => {
+			if (error) {
+				reject(error);
+			} else {
+				resolve(results);
+
+				results[0].forEach((entry) => {
+					//find if there is an object in drink list with a matching id already
+					let existingDrink = resDrinkList.find(
+						(drink) => drink.drink_id === entry.drink_id
+					);
+
+					//if not
+					if (!existingDrink) {
+						//create an object, take necessary details from entry
+						resDrinkList.push({
+							drink_id: entry.drink_id,
+							drink_name: entry.drink_name,
+							drink_method: entry.drink_method,
+							drink_glass: entry.glass_name,
+							drink_price: entry.price,
+							ingredients: [entry.ingr_name],
+							measurements: [entry.measure],
+						});
+					} else {
+						//if we have an existing drink object in drink list with matching menu id, add ingredients and measure to lsits
+						existingDrink.ingredients.push(entry.ingr_name);
+						existingDrink.measurements.push(entry.measure);
+					}
+				});
+			}
+		});
+	});
+
+	//todo
+	console.log(users);
+	console.log(menus);
+
+	let listData = {
+		users: users[0],
+		menus: menus[0],
+		drinkList: resDrinkList
+	};
+	res.render("list.ejs", aboutData);
+});
+
 router.get("/search", function (req, res, next) {
 	let sessionData = {
 		user: req.session.user,
@@ -19,8 +96,8 @@ router.get("/search", function (req, res, next) {
 });
 
 router.post("/searchresult", async function (req, res, next) {
-	const searchtype = req.body.type;
-	const sqlquery = "";
+	let searchtype = req.body.type;
+	let sqlquery = "";
 
 	let sessionData = {
 		user: req.session.user,
@@ -82,6 +159,8 @@ router.post("/searchresult", async function (req, res, next) {
 					}
 
 					responseData = Object.assign({}, resultData, sessionData);
+
+					console.log(responseData);
 					res.render("searchresult.ejs", responseData);
 				}
 			});

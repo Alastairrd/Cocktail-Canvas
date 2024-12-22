@@ -8,17 +8,7 @@ router.get("/register", function (req, res, next) {
 	res.render("register.ejs");
 });
 
-router.get("/list", redirectLogin, function (req, res, next) {
-	let sqlquery = "SELECT username, firstName, lastName, email FROM users"; // query database to get all the books
-	// execute sql query
-	db.query(sqlquery, (err, result) => {
-		if (err) {
-			next(err);
-		}
-		console.log(result);
-		res.render("userlist.ejs", { availableUsers: result });
-	});
-});
+
 
 router.get("/login", function (req, res, next) {
 	let sessionData = {

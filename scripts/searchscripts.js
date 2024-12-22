@@ -4,11 +4,15 @@ function setUserSearch(){
     input.setAttribute("style", "display: block")
     input.setAttribute("maxlength", "16")
 
-    let text = document.getElementById("searchLabel")
-    text.innerText = "User search:"
-
     let type = document.getElementById("type")
     type.setAttribute("value", "user")
+
+    let button = document.getElementById("searchButton")
+    button.setAttribute("style", "display: block")
+
+    let label = document.getElementById("searchLabel")
+    label.setAttribute("style", "display: block")
+    label.innerText = "Search for user: "
 }
 
 function setMenuSearch(){
@@ -17,9 +21,15 @@ function setMenuSearch(){
     input.setAttribute("style", "display: block")
     input.setAttribute("maxlength", "50")
 
-    let text = document.getElementById("searchLabel")
-    text.innerText = "Menu search:"
+    let type = document.getElementById("type")
     type.setAttribute("value", "menu")
+
+    let button = document.getElementById("searchButton")
+    button.setAttribute("style", "display: block")
+
+    let label = document.getElementById("searchLabel")
+    label.setAttribute("style", "display: block")
+    label.innerText = "Search for menu: "
 }
 
 function setDrinkSearch(){
@@ -28,7 +38,13 @@ function setDrinkSearch(){
     input.setAttribute("style", "display: block")
     input.setAttribute("maxlength", "64")
 
-    let text = document.getElementById("searchLabel")
-    text.innerText = "Drink search:"
+    let type = document.getElementById("type")
     type.setAttribute("value", "drink")
+
+    let button = document.getElementById("searchButton")
+    button.setAttribute("style", "display: block")
+
+    let label = document.getElementById("searchLabel")
+    label.setAttribute("style", "display: block")
+    label.innerText = "Search for drink: "
 }

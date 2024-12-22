@@ -41,18 +41,18 @@
       <% for(let i=0; i<results.length; i++) { %>
         <li>
           <% let result = results[i]; %>
-          <% if (result.type == 'user') { %>
+          <% if (type == 'user') { %>
             <p>Username: <%= result.username ? result.username : 'N/A' %></p>
             <p>Company: <%= result.company? result.company : 'N/A' %></p>
-            <p>First name: <%= result.first? result.first : 'N/A' %></p>
-            <p>Last name: <%= result.last? result.last : 'N/A' %></p>
+            <p>First name: <%= result.first? result.firstName : 'N/A' %></p>
+            <p>Last name: <%= result.last? result.lastName : 'N/A' %></p>
             
-          <% } else if (result.type == 'menu') { %>
+          <% } else if (type == 'menu') { %>
             <p>Menu name: <%= result.menu_name ? result.menu_name : 'N/A' %></p>
             <p>Menu description: <%= result.menu_desc ? result.menu_desc : 'N/A' %></p>
             <p>Menu creator: <%= result.Menu_creator? result.menu_creator : 'N/A' %></p>
 
-          <% } else if (result.type === 'drink') { %>
+          <% } else if (type === 'drink') { %>
             <p>Drink name: <%=result.drink_name ? result.drink_name : 'N/A' %></p>
             <p>Method: <%=result.drink_method ? result.drink_method : 'N/A' %></p>
             <p>Glass: <%=result.drink_glass ? result.drink_glass : 'N/A' %></p>
