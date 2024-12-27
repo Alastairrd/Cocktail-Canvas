@@ -12,7 +12,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.get("/list", async function (req, res, next) {
-	let sqlquery = 'CALL get_all_users'; // query database to get all the books
+	let sqlquery = 'CALL get_all_users()'; // query database to get all the users
 	const users = await new Promise((resolve, reject) => {
 		db.query(
 			sqlquery,
@@ -26,10 +26,10 @@ router.get("/list", async function (req, res, next) {
 		);
 	});
 
-	//return count of all menus
-	sqlquery = 'CALL get_all_menus' //todo
+	//return all menus
+	sqlquery = 'CALL get_all_menus()' //todo
 	const menus = await new Promise((resolve, reject) => {
-		db.query(sqlquery, userId, (error, results) => {
+		db.query(sqlquery, (error, results) => {
 			if (error) {
 				reject(error);
 			} else {
@@ -38,11 +38,11 @@ router.get("/list", async function (req, res, next) {
 		});
 	});
 
-	//return count of all menus
-	sqlquery = 'CALL get_all_drinks' //todo
+	//return all drinks
+	sqlquery = 'CALL get_all_drinks()' //todo
 	let resDrinkList=[]
 	const drinks = await new Promise((resolve, reject) => {
-		db.query(sqlquery, userId, (error, results) => {
+		db.query(sqlquery, (error, results) => {
 			if (error) {
 				reject(error);
 			} else {
@@ -79,13 +79,14 @@ router.get("/list", async function (req, res, next) {
 	//todo
 	console.log(users);
 	console.log(menus);
+	console.log(resDrinkList);
 
 	let listData = {
 		users: users[0],
 		menus: menus[0],
 		drinkList: resDrinkList
 	};
-	res.render("list.ejs", aboutData);
+	res.render("list.ejs", listData);
 });
 
 router.get("/search", function (req, res, next) {

@@ -3,6 +3,7 @@
   <head>
     <title>Lists: <%=appData.appName%></title>
     <link rel="stylesheet"  type="text/css" href="/main.css" />
+    <script src="/listscripts.js"></script>
   </head>
   <body>
     <main>
@@ -24,39 +25,43 @@
           </button>
         </div>
 
-		<!--list of posts-->
+		<!--list of users-->
         <div id="user-list-div" style="display: none">
           <ul>
             <% for(let i = 0; i < users.length; i++) { %>
               <li>
                 <div class="user-div">
-                  <p><%=users[i].username%> // <%=users[i].company%> // <%=users[i].firstName%> <%=users[i].lastName%>// <%=users[i].email%> /p>
+                  <p>username: <%=users[i].username%> </p>
+                  <p><%=users[i].company ? users[i].company : 'N/A'%> </p>
+                  <p><%=users[i].firstName && users[i].lastName ? users[i].firstName + ' ' + users[i].lastName : 'N/A'%> </p>
+                  <p><%=users[i].email ? users[i].email : 'N/A'%></p>
                 </div>
               </li>
             <% } %>
           </ul>
         </div>
 
-		<!--list of users-->
+		<!--list of menus-->
         <div id="menu-list-div" style="display: none">
           <% for(let i = 0; i < menus.length; i++) { %>
             <li>
-              <div class="menu-div">
-                <p><%=menus[i].menu_name%> // <%=menus[i].menu_desc%> /p>
-              </div>
+              <a class="menu-link" href="/menus/view?menuId=<%=menus[i].menu_id%>" ><div class="menu-div">
+                <p><%=menus[i].menu_name%></p>
+                <p><%=menus[i].menu_desc ? menus[i].menu_desc : 'N/A'%> </p>
+              </div></a>
             </li>
           <% } %>
         </div>
 
-		<!--list of topics-->
+		<!--list of drinks-->
         <div id="drink-list-div" style="display: none">
           <% for(i=0; i<drinkList.length; i++) { %>
             <li>
               <div id="drink-div<%=i%>" class="cocktail-item-div" activeNow="0">
                 <p class="cocktail-item-name"><%=drinkList[i].drink_name%></p>
                 <button class="show-button-drink" onclick="toggleCocktail('drink-div<%=i%>')">Show more</button>
-                <p id="drink-method<%=i%>" style="display: none" class="cocktail-item-method">Method: <%=drinkList[i].drink_method%></p>
-                <p id="drink-glass<%=i%>" style="display: none" class="cocktail-item-glass">Glass: <%=drinkList[i].drink_glass%></p>
+                <p id="drink-method<%=i%>" style="display: none" class="cocktail-item-method">Method: <%=drinkList[i].drink_method ? drinkList[i].drink_method : 'N/A' %></p>
+                <p id="drink-glass<%=i%>" style="display: none" class="cocktail-item-glass">Glass: <%=drinkList[i].drink_glass ? drinkList[i].drink_glass : 'N/A'%></p>
                 <ul id="drink-ingrs<%=i%>" style="display: none" class="cocktail-item-ingrlist">
                   <% if (drinkList[i].ingredients && drinkList[i].measurements) { %>
                     <% for (let j = 0; j < drinkList[i].ingredients.length; j++) { %>

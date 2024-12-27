@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>View Menu: <%=appData.appName%></title>
+		<link rel="stylesheet" type="text/css" href="/main.css" />
+	</head>
+	<body>
+		<div>
+			<!--top banner for view menu-->
+			<div id="view-menu-banner">
+				<h1>Displaying a menu: <%=appData.appName%></h1>
+			</div>
+
+			<!--section for listing current menu-->
+			<div id="view-container">
+				<p>Menu name: <%= menu_name ? menu_name : 'N/A' %></p>
+				<p>Menu description: <%= menu_desc ? menu_desc : 'N/A' %></p>
+				<div id="view-list-container">
+					<div id="current-list-div">
+						<ul>
+							<% if (drinkList.length < 1) { %> <p>No drink data found for menu.</p> <% }%>
+							<% for(i=0; i<drinkList.length; i++) { %>
+								<li>
+									<div class="cocktail-item-div">
+										<p class="cocktail-item-name"><%=drinkList[i].drink_name%></p>
+										<p class="cocktail-item-method">Method: <%=drinkList[i].drink_method%></p>
+										<p class="cocktail-item-glass">Glass: <%=drinkList[i].drink_glass%></p>
+										<p class="cocktail-item-price">Price: £<%=drinkList[i].drink_price%></p>
+										<ul>
+											<% if (drinkList[i].ingredients && drinkList[i].measurements) { %>
+												<% for (let j = 0; j < drinkList[i].ingredients.length; j++) { %>
+													<li class="ingredient-list-item">
+														<p><%= drinkList[i].ingredients[j] %> : <%= drinkList[i].measurements[j] %></p>
+													</li>
+												<% } %>
+											<% } else { %>
+												<li>No ingredients or measurements found for this drink.</li>
+											<% } %>
+										</ul>
+									</div>
+								</li>
+							<% } %>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

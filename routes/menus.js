@@ -2,6 +2,71 @@
 const express = require("express");
 const router = express.Router();
 
+router.get("/view", async function (req, res, next) {
+	const menuId = req.query.menuId;
+	let results;
+	let menuInfo;
+
+	try {
+		let menuSqlQuery = `CALL get_menu(?)`;
+		menuInfo = await new Promise((resolve, reject) => {
+			db.query(menuSqlQuery, menuId, (error, results) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(results);
+				}
+			});
+		});
+
+		console.log(menuInfo);
+
+		menuSqlQuery = `CALL get_current_drink_list(?)`;
+		results = await new Promise((resolve, reject) => {
+			db.query(menuSqlQuery, menuId, (error, results) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(results);
+				}
+			});
+		});
+	} catch (error) {
+		res.render("error.ejs", {message: error})
+		return;
+	}
+
+	//initialise a drinkList for holding objects
+	let resDrinkList = [];
+	results[0].forEach((entry) => {
+		//find if there is an object in drink list with a matching id already
+		let existingDrink = resDrinkList.find(
+			(drink) => drink.drink_id === entry.drink_id
+		);
+
+		//if not
+		if (!existingDrink) {
+			//create an object, take necessary details from entry
+			resDrinkList.push({
+				drink_id: entry.drink_id,
+				drink_name: entry.drink_name,
+				drink_method: entry.drink_method,
+				drink_glass: entry.glass_name,
+				drink_price: entry.price,
+				ingredients: [entry.ingr_name],
+				measurements: [entry.measure],
+			});
+		} else {
+			//if we have an existing drink object in drink list with matching menu id, add ingredients and measure to lsits
+			existingDrink.ingredients.push(entry.ingr_name);
+			existingDrink.measurements.push(entry.measure);
+		}
+	});
+
+	let menuData = { drinkList: resDrinkList, menu_id: menuId, menu_name: menuInfo[0][0].menu_name , menu_desc: menuInfo[0][0].menu_desc};
+	res.render("viewmenu.ejs", menuData);
+});
+
 router.get("/create", redirectLogin, function (req, res, next) {
 	let sessionData = {
 		user: req.session.user,
@@ -37,7 +102,7 @@ router.get("/editmenu", redirectLogin, async function (req, res, next) {
 	const menuId = req.query.menu_id;
 
 	const sqlQuery = `CALL check_menu_against_user(?,?)`;
-	let params = [menuId, req.session.user_id]
+	let params = [menuId, req.session.user_id];
 	checkResults = await new Promise((resolve, reject) => {
 		db.query(sqlQuery, params, (error, results) => {
 			if (error) {
@@ -49,8 +114,10 @@ router.get("/editmenu", redirectLogin, async function (req, res, next) {
 	});
 
 	//if not owner of menu
-	if(!checkResults[0][0].is_owner){
-		res.render('error.ejs', {message: "Menu does not belong to this user."})
+	if (!checkResults[0][0].is_owner) {
+		res.render("error.ejs", {
+			message: "Menu does not belong to this user.",
+		});
 		return;
 	}
 
@@ -66,7 +133,7 @@ router.get("/editmenu", redirectLogin, async function (req, res, next) {
 		});
 	});
 
-    //initialise a drinkList for holding objects
+	//initialise a drinkList for holding objects
 	let resDrinkList = [];
 	results[0].forEach((entry) => {
 		//find if there is an object in drink list with a matching id already
@@ -93,9 +160,8 @@ router.get("/editmenu", redirectLogin, async function (req, res, next) {
 		}
 	});
 
-    let menuData = { drinkList: resDrinkList, menu_id: menuId }
-	res.render(
-		"editmenu.ejs", menuData);
+	let menuData = { drinkList: resDrinkList, menu_id: menuId };
+	res.render("editmenu.ejs", menuData);
 });
 
 router.get("/editlist", redirectLogin, async function (req, res, next) {
@@ -159,7 +225,7 @@ router.post(
 			});
 		});
 
-		res.redirect(`/menus/editmenu?menu_id=${menuId}`)
+		res.redirect(`/menus/editmenu?menu_id=${menuId}`);
 	}
 );
 

@@ -15,8 +15,7 @@ router.get("/", async function (req, res, next) {
 			users: "https://doc.gold.ac.uk/usr/717/api/users",
 			menus: "https://doc.gold.ac.uk/usr/717/api/menus",
 			drinks: "https://doc.gold.ac.uk/usr/717/api/drinks",
-			ingredients: "https://doc.gold.ac.uk/usr/717/api/ingredients",
-			glass: "https://doc.gold.ac.uk/usr/717/api/ingredients"
+			ingredients: "https://doc.gold.ac.uk/usr/717/api/ingredients"
 		}
 	}
 
@@ -27,7 +26,7 @@ router.get("/", async function (req, res, next) {
 // USERS API//
 /////////////
 
-//list all users
+//list all links in users api
 router.get("/users", async function (req, res, next) {
 	//list of routes
 	//todo update and correct
@@ -37,10 +36,10 @@ router.get("/users", async function (req, res, next) {
 			register: "https://doc.gold.ac.uk/usr/717/api/users/register",
 			register_info: "POST REQUEST // Required parameters: `password` (length 8 - 24), `username` (length 8 - 16) // Optional parameters: " +
 			"`email`: (valid, max length 320), `company`: (max length 64), `first`: (max length 20), `last`: (max length 30)",
+			get: "https://doc.go.d.ac.uk/usr/717/api/users/get",
+			get_info: "GET REQUEST // Required paramaters: `user_id` (INT)",
 			search: "https://doc.gold.ac.uk/usr/717/api/users/search",
-			search_info: "GET REQUEST // Required parameters: `keyword` (max length 16)",
-			update: "https://doc.gold.ac.uk/usr/717/api/users/update", //todo
-			delete: "https://doc.gold.ac.uk/usr/717/api/users/delete", //todo need JWT?
+			search_info: "GET REQUEST // Required parameters: `keyword` (max length 50)",
 			list: "https://doc.gold.ac.uk/usr/717/api/users/list",
 			list_info: "GET REQUEST // Required parameters: N/A"
 		}
@@ -107,8 +106,34 @@ router.post(
 	}
 );
 
+//user get
+router.get("/users/get", async function (req, res, next) {
+	const menuId = req.query.user_id;
+	let userInfo;
+
+	try {
+		let menuSqlQuery = `CALL get_user(?)`;
+		userInfo = await new Promise((resolve, reject) => {
+			db.query(menuSqlQuery, menuId, (error, results) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(results);
+				}
+			});
+		});
+	} catch (error) {
+		res.render("error.ejs", {message: error})
+		return;
+	}
+
+	let apiData = {user_info: userInfo[0]}
+
+	res.json(apiData);
+});
+
 //user search
-router.get("/search", async function (req, res, next) {
+router.get("/users/search", async function (req, res, next) {
 	let sqlquery = `CALL search_for_user(?)`;
 
 	results = await new Promise((resolve, reject) => {
@@ -129,9 +154,8 @@ router.get("/search", async function (req, res, next) {
 	});
 });
 
-
 //list all users
-router.get("/listusers", async function (req, res, next) {
+router.get("/users/list", async function (req, res, next) {
 	let sqlquery = `CALL get_all_users()`;
 	//todo include count
 
@@ -153,8 +177,93 @@ router.get("/listusers", async function (req, res, next) {
 	});
 });
 
-// Handle our api routes
-router.get("/listmenus", async function (req, res, next) {
+/////////////
+// MENUS  //
+//////////////
+
+//menu base listing all links
+router.get("/menus", async function (req, res, next) {
+	//list of routes
+	//todo update and correct
+	let apiData = {
+		version: "0.1",
+		links: {
+			get: "https://doc.gold.ac.uk/usr/717/api/menus/get",
+			get_info: "GET REQUEST // Required parameters: `menu_id` (INT)",
+			search: "https://doc.gold.ac.uk/usr/717/api/menus/search",
+			search_info: "GET REQUEST // Required parameters: `keyword` (max length 16)",
+			list: "https://doc.gold.ac.uk/usr/717/api/menus/list",
+			list_info: "GET REQUEST // Required parameters: N/A"
+		}
+	}
+
+	res.json(apiData);
+});
+
+//get menu
+router.get("/menus/get", async function (req, res, next) {
+	const menuId = req.query.menu_id;
+	let results;
+	let menuInfo;
+
+	try {
+		let menuSqlQuery = `CALL get_menu(?)`;
+		menuInfo = await new Promise((resolve, reject) => {
+			db.query(menuSqlQuery, menuId, (error, results) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(results);
+				}
+			});
+		});
+
+		console.log(menuInfo);
+
+		menuSqlQuery = `CALL get_current_drink_list(?)`;
+		results = await new Promise((resolve, reject) => {
+			db.query(menuSqlQuery, menuId, (error, results) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(results);
+				}
+			});
+		});
+	} catch (error) {
+		res.render("error.ejs", {message: error})
+		return;
+	}
+
+	let apiData = {menu_info: menuInfo[0][0], drinklist: results[0]}
+
+	res.json(apiData);
+});
+
+//menu search
+router.get("/menus/search", async function (req, res, next) {
+	let sqlquery = `CALL search_for_menu(?)`;
+
+	results = await new Promise((resolve, reject) => {
+		db.query(sqlquery, req.query.keyword, (error, results) => {
+			if (error) {
+				reject(error);
+                res.json({error: error});
+			} else {
+				resolve(results);
+
+				let apiData = {
+					menus: results[0],
+				};
+
+				res.json(apiData);
+			}
+		});
+	});
+});
+
+//list menus
+router.get("/menus/list", async function (req, res, next) {
 	let sqlquery = `CALL get_all_menus()`;
 
 	results = await new Promise((resolve, reject) => {
@@ -174,9 +283,96 @@ router.get("/listmenus", async function (req, res, next) {
 	res.json(apiData);
 });
 
-//list all users
-router.get("/listusers", async function (req, res, next) {
-	let sqlquery = `CALL get_all_users()`;
+/////////////
+// DRINKS  //
+/////////////
+
+//menu base listing all links
+router.get("/drinks", async function (req, res, next) {
+	//list of routes
+	//todo update and correct
+	let apiData = {
+		version: "0.1",
+		links: {
+			get: "https://doc.gold.ac.uk/usr/717/api/drinks/get",
+			get_info: "GET REQUEST // Required parameters: `drink_id` (INT)",
+			search: "https://doc.gold.ac.uk/usr/717/api/drinks/search",
+			search_info: "GET REQUEST // Required parameters: `keyword` (max length 64)",
+			list: "https://doc.gold.ac.uk/usr/717/api/drinks/list",
+			list_info: "GET REQUEST // Required parameters: N/A",
+			listbycount: "https://doc.gold.ac.uk/usr/717/api/drinks/listbycount",
+			listbycount_info: "GET REQUEST // Required parameters: N/A"
+		}
+	}
+
+	res.json(apiData);
+});
+
+//get drinks
+router.get("/drinks/get", async function (req, res, next) {
+	const drinkId = req.query.drink_id;
+	let results;
+	let drinkInfo;
+
+	try {
+		let drinkSqlQuery = `CALL get_drink(?)`;
+		drinkInfo = await new Promise((resolve, reject) => {
+			db.query(drinkSqlQuery, drinkId, (error, results) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(results);
+				}
+			});
+		});
+
+		console.log(drinkInfo);
+
+		drinkSqlQuery = `CALL get_current_drink_list(?)`;
+		results = await new Promise((resolve, reject) => {
+			db.query(drinkSqlQuery, drinkId, (error, results) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(results);
+				}
+			});
+		});
+	} catch (error) {
+		res.render("error.ejs", {message: error})
+		return;
+	}
+
+	let apiData = {drink_info: drinkInfo[0][0], drinklist: results[0]}
+
+	res.json(apiData);
+});
+
+//search drinks
+router.get("/drinks/search", async function (req, res, next) {
+	let sqlquery = `CALL search_for_drink(?)`;
+
+	results = await new Promise((resolve, reject) => {
+		db.query(sqlquery, req.query.keyword, (error, results) => {
+			if (error) {
+				reject(error);
+                res.json({error: error});
+			} else {
+				resolve(results);
+
+				let apiData = {
+					drinks: results[0],
+				};
+
+				res.json(apiData);
+			}
+		});
+	});
+});
+
+//list all drinks
+router.get("/drinks/list", async function (req, res, next) {
+	let sqlquery = `CALL get_all_drinks()`;
 
 	results = await new Promise((resolve, reject) => {
 		db.query(sqlquery, (error, results) => {
@@ -187,7 +383,7 @@ router.get("/listusers", async function (req, res, next) {
 				resolve(results);
 
 				let apiData = {
-					users: results[0],
+					drinks: results[0],
 				};
 
 				res.json(apiData);
@@ -197,7 +393,7 @@ router.get("/listusers", async function (req, res, next) {
 });
 
 //returns name of drinks and number of menus featured in
-router.get("/listdrinksbycount", async function (req, res, next) {
+router.get("/drinks/listbycount", async function (req, res, next) {
 	let sqlquery = `CALL list_drinks_by_count()`;
     results = await new Promise((resolve, reject) => {
 		db.query(sqlquery, (error, results) => {
@@ -217,8 +413,103 @@ router.get("/listdrinksbycount", async function (req, res, next) {
 	});
 });
 
+/////////////////
+// INGREDIENTS //
+/////////////////
+
+//menu base listing all links
+router.get("/ingredients", async function (req, res, next) {
+	//list of routes
+	//todo update and correct
+	let apiData = {
+		version: "0.1",
+		links: {
+			get: "https://doc.gold.ac.uk/usr/717/api/ingredients/get",
+			get_info: "GET REQUEST // Required parameters: `ingr_id` (INT)",
+			search: "https://doc.gold.ac.uk/usr/717/api/ingredients/search",
+			search_info: "GET REQUEST // Required parameters: `keyword` (max length 64)",
+			list: "https://doc.gold.ac.uk/usr/717/api/ingredients/list",
+			list_info: "GET REQUEST // Required parameters: N/A",
+			listbycount: "https://doc.gold.ac.uk/usr/717/api/ingredients/listbycount",
+			listbycount_info: "GET REQUEST // Required parameters: N/A"
+		}
+	}
+
+	res.json(apiData);
+});
+
+//get ingredients
+router.get("/ingredients/get", async function (req, res, next) {
+	const ingrId = req.query.ingr_id;
+	let ingrInfo;
+
+	try {
+		let ingrSqlQuery = `CALL get_ingr(?)`;
+		ingrInfo = await new Promise((resolve, reject) => {
+			db.query(ingrSqlQuery, ingrId, (error, results) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(results);
+				}
+			});
+		});
+	} catch (error) {
+		res.render("error.ejs", {message: error})
+		return;
+	}
+
+	let apiData = {ingredient: ingrInfo[0]}
+
+	res.json(apiData);
+});
+
+//search ingredients
+router.get("/ingredients/search", async function (req, res, next) {
+	let sqlquery = `CALL search_for_ingr(?)`;
+
+	results = await new Promise((resolve, reject) => {
+		db.query(sqlquery, req.query.keyword, (error, results) => {
+			if (error) {
+				reject(error);
+                res.json({error: error});
+			} else {
+				resolve(results);
+
+				let apiData = {
+					ingredients: results[0],
+				};
+
+				res.json(apiData);
+			}
+		});
+	});
+});
+
+//list all ingredients
+router.get("/ingredients/list", async function (req, res, next) {
+	let sqlquery = `CALL get_all_ingrs()`;
+
+	results = await new Promise((resolve, reject) => {
+		db.query(sqlquery, (error, results) => {
+			if (error) {
+				reject(error);
+                res.send("Error in API request from database.")
+			} else {
+				resolve(results);
+
+				let apiData = {
+					ingredients: results[0],
+				};
+
+				res.json(apiData);
+			}
+		});
+	});
+});
+
 //returns all ingredients by how many times featured in drinks
-router.get("/listingrbycount", async function (req, res, next) {
+router.get("/ingredients/listbycount", async function (req, res, next) {
 	let sqlquery = `CALL list_ingr_by_count()`;
     results = await new Promise((resolve, reject) => {
 		db.query(sqlquery, (error, results) => {
