@@ -23,20 +23,34 @@
       </ul>
     </nav>
     <main>
-      <h1>List of your current menus: <%=appData.appName%></h1>
-      <h2>Pick one of your menus to edit!</h2>
-      <ul>
-        <% menuList.forEach(function(menu) { %>
-          <li>
-            <form action="/menus/editmenu" method="GET">
-                <label for="name">Menu Name: <%= menu.menu_name %></label>
-                <label for="desc">Menu Description: <%= menu.menu_desc %></label>
-              <input type="hidden" name="menu_id" value="<%= menu.menu_id %>">
-              <button type="submit">Edit Menu</button>
-            </form>
-          </li>
-        <% }) %>
-      </ul>
+      
+      <div class="flex-container centred">
+        <div class="full-width"> 
+          <h1 class="heading">List of your current menus: <%=appData.appName%></h1>
+          <h2 class="subheading">Pick one of your menus to edit!</h2>
+        </div>
+        <div id="menu-list-div" class="list-div">
+          <ul>
+            <% menuList.forEach(function(menu) { %>
+              <li class="edit-menu-item">
+                <a
+                    class="menu-link"
+                    href="/menus/view?menuId=<%= menu.menu_id %>"
+                  >
+                  <div class="menu-div edit-menu-div">
+                    <form class="edit-menu-div" action="/menus/editmenu" method="GET">
+                        <label class="menu-name full-width" for="name"><%= menu.menu_name %></label>
+                        <label for="desc">Menu Description: <%= menu.menu_desc %></label>
+                      <input type="hidden" name="menu_id" value="<%= menu.menu_id %>">
+                      <button class="basic-button edit-button" type="submit">Edit Menu</button>
+                    </form>
+                  </div>
+                </a>
+              </li>
+            <% }) %>
+          </ul>
+        </div>
+      </div>
     </main>
   </body>
 </html>
