@@ -5,7 +5,7 @@ const router = express.Router();
 const { check, validationResult } = require("express-validator");
 
 router.get("/register", function (req, res, next) {
-	res.render("register.ejs");
+	res.render("register.ejs", {user: req.session.user});
 });
 
 

@@ -6,27 +6,47 @@
     <script src="/listscripts.js"></script>
   </head>
   <body>
+    <nav class="topnav">
+      <ul>
+        <li><a href="./"><%=appData.appName%></a></li>
+        <li><a class="active" href="list">Lists</a></li> <!--todo-->
+        <li><a href="search">Search</a></li> <!--todo-->
+        <li><a href="menus/editlist">Edit Menus</a></li> <!--todo-->
+        <li><a href="menus/create">Create</a></li>
+        <li><a href="about">About</a></li>
+      <!--if no user, show login-->
+      <% if(user == null){ %>
+          <li class="right"><a href="users/login">Log in</a></li>
+      <!--if user exists, show logout-->
+      <% } else { %>
+          <li class="right"><a href="logout">Logout</a></li>
+          <% } %>
+      </ul>
+    </nav>
     <main>
-      <div class="main">
-
-		<!--list page heading-->
-        <h1 id="list-heading">List Page: Select a category below to list</h1>
-
-		<!--buttons to select what type of list to display-->
+      <div class="flex-container centred">
+		    <!--list page heading-->
+        <div class="full-width">
+          <h1 id="list-heading">List Page: Select a category below to list</h1>
+        </div>
+        
+		    <!--buttons to select what type of list to display-->
         <div class="list-button-div">
-          <button class="list-button" id="users-button" onclick="toggleList('user-list-div')">
+          <button class="list-button" id="users-button" onclick="toggleList('user-list-div', 'users-button')">
             Users
           </button>
-          <button class="list-button" id="menus-button" onclick="toggleList('menu-list-div')">
+          <button class="list-button" id="menus-button" onclick="toggleList('menu-list-div', 'menus-button')">
             Menus
           </button>
-          <button class="list-button" id="drinks-button" onclick="toggleList('drink-list-div')">
+          <button class="list-button" id="drinks-button" onclick="toggleList('drink-list-div', 'drinks-button')">
             Drinks
           </button>
         </div>
 
-		<!--list of users-->
+		    <!--list of users-->
         <div id="user-list-div" style="display: none">
+          <!--user stat section-->
+          <p class="stat-heading">Total users: <%=user_count%></p>
           <ul>
             <% for(let i = 0; i < users.length; i++) { %>
               <li>
@@ -41,41 +61,49 @@
           </ul>
         </div>
 
-		<!--list of menus-->
+		    <!--list of menus-->
         <div id="menu-list-div" style="display: none">
-          <% for(let i = 0; i < menus.length; i++) { %>
-            <li>
-              <a class="menu-link" href="/menus/view?menuId=<%=menus[i].menu_id%>" ><div class="menu-div">
-                <p><%=menus[i].menu_name%></p>
-                <p><%=menus[i].menu_desc ? menus[i].menu_desc : 'N/A'%> </p>
-              </div></a>
-            </li>
-          <% } %>
+          <!--menu stat section-->
+          <p class="stat-heading">Total menus: <%=menu_count%></p>
+          <ul>
+            <% for(let i = 0; i < menus.length; i++) { %>
+              <li>
+                <a class="menu-link" href="/menus/view?menuId=<%=menus[i].menu_id%>" ><div class="menu-div">
+                  <p><%=menus[i].menu_name%></p>
+                  <p><%=menus[i].menu_desc ? menus[i].menu_desc : 'N/A'%> </p>
+                </div></a>
+              </li>
+            <% } %>
+          </ul>
         </div>
 
-		<!--list of drinks-->
+		    <!--list of drinks-->
         <div id="drink-list-div" style="display: none">
-          <% for(i=0; i<drinkList.length; i++) { %>
-            <li>
-              <div id="drink-div<%=i%>" class="cocktail-item-div" activeNow="0">
-                <p class="cocktail-item-name"><%=drinkList[i].drink_name%></p>
-                <button class="show-button-drink" onclick="toggleCocktail('drink-div<%=i%>')">Show more</button>
-                <p id="drink-method<%=i%>" style="display: none" class="cocktail-item-method">Method: <%=drinkList[i].drink_method ? drinkList[i].drink_method : 'N/A' %></p>
-                <p id="drink-glass<%=i%>" style="display: none" class="cocktail-item-glass">Glass: <%=drinkList[i].drink_glass ? drinkList[i].drink_glass : 'N/A'%></p>
-                <ul id="drink-ingrs<%=i%>" style="display: none" class="cocktail-item-ingrlist">
-                  <% if (drinkList[i].ingredients && drinkList[i].measurements) { %>
-                    <% for (let j = 0; j < drinkList[i].ingredients.length; j++) { %>
-                      <li class="ingredient-list-item">
-                        <p><%= drinkList[i].ingredients[j] %> : <%= drinkList[i].measurements[j] %></p>
-                      </li>
+          <!--drink stat section-->
+          <p class="stat-heading">Total drinks: <%=drink_count%></p>
+          <ul>
+            <% for(i=0; i<drinkList.length; i++) { %>
+              <li>
+                <div id="drink-div<%=i%>" class="cocktail-item-div" activeNow="0">
+                  <p class="cocktail-item-name"><%=drinkList[i].drink_name%></p>
+                  <button class="show-button-drink" onclick="toggleCocktail('drink-div<%=i%>')">Show more</button>
+                  <p id="drink-method<%=i%>" style="display: none" class="cocktail-item-method">Method: <%=drinkList[i].drink_method ? drinkList[i].drink_method : 'N/A' %></p>
+                  <p id="drink-glass<%=i%>" style="display: none" class="cocktail-item-glass">Glass: <%=drinkList[i].drink_glass ? drinkList[i].drink_glass : 'N/A'%></p>
+                  <ul id="drink-ingrs<%=i%>" style="display: none" class="cocktail-item-ingrlist">
+                    <% if (drinkList[i].ingredients && drinkList[i].measurements) { %>
+                      <% for (let j = 0; j < drinkList[i].ingredients.length; j++) { %>
+                        <li class="ingredient-list-item">
+                          <p><%= drinkList[i].ingredients[j] %> : <%= drinkList[i].measurements[j] %></p>
+                        </li>
+                      <% } %>
+                    <% } else { %>
+                      <li>No ingredients or measurements found for this drink.</li>
                     <% } %>
-                  <% } else { %>
-                    <li>No ingredients or measurements found for this drink.</li>
-                  <% } %>
-                </ul>
-              </div>
-            </li>
-          <% } %>
+                  </ul>
+                </div>
+              </li>
+            <% } %>
+          </ul>
         </div>
       </div>
     </main>

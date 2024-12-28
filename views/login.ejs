@@ -5,16 +5,34 @@
     <link rel="stylesheet"  type="text/css" href="/main.css" />
   </head>
   <body>
+    <nav class="topnav">
+      <ul>
+        <li><a href="../"><%=appData.appName%></a></li>
+        <li><a href="../list">Lists</a></li> <!--todo-->
+        <li><a href="../search">Search</a></li> <!--todo-->
+        <li><a href="../menus/editlist">Edit Menus</a></li> <!--todo-->
+        <li><a href="../menus/create">Create</a></li>
+        <li><a href="../about">About</a></li>
+      <!--if no user, show login-->
+      <% if(user == null){ %>
+          <li class="right"><a class="active" href="../users/login">Log in</a></li>
+      <!--if user exists, show logout-->
+      <% } else { %>
+          <li class="right"><a class="active" href="../logout">Logout</a></li>
+          <% } %>
+      </ul>
+    </nav>
     <!--error message displays if redirected with failed login-->
     <% if(loginFailed == true) { %>
       <p>Account not found, or incorrect details, please try again.</p>
     <% } %>
-
-    <h1>Log in for <%=appData.appName%></h1>
-    <form method="POST" action="login">
+    <main>
+      <h1>Log in for <%=appData.appName%></h1>
+      <form method="POST" action="login">
         <p>Username: <input id="username" type="text" name="username" value="" maxlength="16" /></p>
         <p>Password: <input id="password" type="password" name="password" value="" maxlength="24" /></p>
         <input type="submit" value="Log In" />
       </form>
+    </main>
   </body>
 </html>

@@ -5,13 +5,30 @@
     <link rel="stylesheet"  type="text/css" href="/main.css" />
   </head>
   <body>
-    <div>
+    <nav class="topnav">
+      <ul>
+        <li><a href="../"><%=appData.appName%></a></li>
+        <li><a href="../list">Lists</a></li> <!--todo-->
+        <li><a href="../search">Search</a></li> <!--todo-->
+        <li><a href="../menus/editlist">Edit Menus</a></li> <!--todo-->
+        <li><a class="active" href="../menus/create">Create</a></li>
+        <li><a href="../about">About</a></li>
+      <!--if no user, show login-->
+      <% if(user == null){ %>
+          <li class="right"><a href="../users/login">Log in</a></li>
+      <!--if user exists, show logout-->
+      <% } else { %>
+          <li class="right"><a href="../logout">Logout</a></li>
+          <% } %>
+      </ul>
+    </nav>
+    <main>
       <h1>Create a menu: <%=appData.appName%></h1>
       <form method="POST" action="create">
         <p>Menu name: <input id="menu_name" type="text" name="menu_name" value="" maxlength="50" /></p>
         <p>Menu description: <input id="menu_desc" type="text" name="menu_desc" value="" maxlength="256" /></p>
         <input type="submit" value="Create" />
       </form>
-    </div>
+    </main>
   </body>
 </html>

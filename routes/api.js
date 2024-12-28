@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const { check, validationResult } = require("express-validator");
+const apiVersion = 0.1
 
 //base api route
 router.get("/", async function (req, res, next) {
@@ -28,10 +29,24 @@ router.get("/", async function (req, res, next) {
 
 //list all links in users api
 router.get("/users", async function (req, res, next) {
+
+	//return count of all users
+	const usersCount = await new Promise((resolve, reject) => {
+		db.query(`CALL get_user_count()`, (error, results) => {
+			if (error) {
+				reject(error);
+				throw new Error(error)
+			} else {
+				resolve(results);
+			}
+		});
+	});
+
 	//list of routes
 	//todo update and correct
 	let apiData = {
-		version: "0.1",
+		version: apiVersion,
+		total_users: usersCount[0][0].user_count ? usersCount[0][0].user_count : 'Error in user count',
 		links: {
 			register: "https://doc.gold.ac.uk/usr/717/api/users/register",
 			register_info: "POST REQUEST // Required parameters: `password` (length 8 - 24), `username` (length 8 - 16) // Optional parameters: " +
@@ -183,10 +198,24 @@ router.get("/users/list", async function (req, res, next) {
 
 //menu base listing all links
 router.get("/menus", async function (req, res, next) {
+
+	//return count of all menus
+	const menusCount = await new Promise((resolve, reject) => {
+		db.query(`CALL get_menu_count()`, (error, results) => {
+			if (error) {
+				reject(error);
+				throw new Error(error)
+			} else {
+				resolve(results);
+			}
+		});
+	});
+
 	//list of routes
 	//todo update and correct
 	let apiData = {
-		version: "0.1",
+		version: apiVersion,
+		menu_count: menusCount[0][0].menu_count ? menusCount[0][0].menu_count : 'Error in menu count',
 		links: {
 			get: "https://doc.gold.ac.uk/usr/717/api/menus/get",
 			get_info: "GET REQUEST // Required parameters: `menu_id` (INT)",
@@ -289,10 +318,24 @@ router.get("/menus/list", async function (req, res, next) {
 
 //menu base listing all links
 router.get("/drinks", async function (req, res, next) {
+
+	//return count of all drinks
+	const drinksCount = await new Promise((resolve, reject) => {
+		db.query(`CALL get_drink_count()`, (error, results) => {
+			if (error) {
+				reject(error);
+				throw new Error(error)
+			} else {
+				resolve(results);
+			}
+		});
+	});
+
 	//list of routes
 	//todo update and correct
 	let apiData = {
-		version: "0.1",
+		version: apiVersion,
+		drink_count: drinksCount[0][0].drink_count ? drinksCount[0][0].drink_count : 'Error in drink count',
 		links: {
 			get: "https://doc.gold.ac.uk/usr/717/api/drinks/get",
 			get_info: "GET REQUEST // Required parameters: `drink_id` (INT)",
@@ -419,10 +462,24 @@ router.get("/drinks/listbycount", async function (req, res, next) {
 
 //menu base listing all links
 router.get("/ingredients", async function (req, res, next) {
+
+	//return count of all ingrs
+	const ingrsCount = await new Promise((resolve, reject) => {
+		db.query(`CALL get_ingr_count()`, (error, results) => {
+			if (error) {
+				reject(error);
+				throw new Error(error)
+			} else {
+				resolve(results);
+			}
+		});
+	});
+
 	//list of routes
 	//todo update and correct
 	let apiData = {
-		version: "0.1",
+		version: apiVersion,
+		ingredient_count: ingrsCount[0][0].ingr_count,
 		links: {
 			get: "https://doc.gold.ac.uk/usr/717/api/ingredients/get",
 			get_info: "GET REQUEST // Required parameters: `ingr_id` (INT)",

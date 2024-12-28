@@ -5,7 +5,24 @@
 		<link rel="stylesheet" type="text/css" href="/main.css" />
 	</head>
 	<body>
-		<div>
+		<nav class="topnav">
+			<ul>
+			  <li><a href="../"><%=appData.appName%></a></li>
+			  <li><a href="../list">Lists</a></li> <!--todo-->
+			  <li><a href="../search">Search</a></li> <!--todo-->
+			  <li><a href="../menus/editlist">Edit Menus</a></li> <!--todo-->
+			  <li><a href="../menus/create">Create</a></li>
+			  <li><a href="../about">About</a></li>
+			<!--if no user, show login-->
+			<% if(user == null){ %>
+				<li class="right"><a href="../users/login">Log in</a></li>
+			<!--if user exists, show logout-->
+			<% } else { %>
+				<li class="right"><a href="../logout">Logout</a></li>
+				<% } %>
+			</ul>
+		  </nav>
+		<main>
 			<!--top banner for view menu-->
 			<div id="view-menu-banner">
 				<h1>Displaying a menu: <%=appData.appName%></h1>
@@ -44,6 +61,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</main>
 	</body>
 </html>

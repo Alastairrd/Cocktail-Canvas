@@ -32,7 +32,7 @@ router.get("/view", async function (req, res, next) {
 			});
 		});
 	} catch (error) {
-		res.render("error.ejs", {message: error})
+		res.render("error.ejs", { message: error });
 		return;
 	}
 
@@ -63,7 +63,13 @@ router.get("/view", async function (req, res, next) {
 		}
 	});
 
-	let menuData = { drinkList: resDrinkList, menu_id: menuId, menu_name: menuInfo[0][0].menu_name , menu_desc: menuInfo[0][0].menu_desc};
+	let menuData = {
+		drinkList: resDrinkList,
+		menu_id: menuId,
+		menu_name: menuInfo[0][0].menu_name,
+		menu_desc: menuInfo[0][0].menu_desc,
+		user: req.session.user,
+	};
 	res.render("viewmenu.ejs", menuData);
 });
 
@@ -117,6 +123,7 @@ router.get("/editmenu", redirectLogin, async function (req, res, next) {
 	if (!checkResults[0][0].is_owner) {
 		res.render("error.ejs", {
 			message: "Menu does not belong to this user.",
+			user: req.session.user,
 		});
 		return;
 	}
@@ -160,7 +167,11 @@ router.get("/editmenu", redirectLogin, async function (req, res, next) {
 		}
 	});
 
-	let menuData = { drinkList: resDrinkList, menu_id: menuId };
+	let menuData = {
+		drinkList: resDrinkList,
+		menu_id: menuId,
+		user: req.session.user,
+	};
 	res.render("editmenu.ejs", menuData);
 });
 
@@ -181,7 +192,7 @@ router.get("/editlist", redirectLogin, async function (req, res, next) {
 	});
 
 	//send back info for menus
-	menuListData = { menuList: results[0] };
+	menuListData = { menuList: results[0], user: req.session.user };
 	res.render("editlist.ejs", menuListData);
 });
 

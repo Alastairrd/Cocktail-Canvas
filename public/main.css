@@ -1,49 +1,81 @@
-/* Navigation Bar */
-.topnav {
-  background-color: #f5f5f5; /* Light grey */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  padding: 10px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+
+/*main elements*/
+body {
+  background-color: #292b29;
+  margin: 0;
+  height: 100%;
 }
 
-/* Navigation Items */
-.topnav ul {
-  list-style: none;
+main {
+  background-color: #202320;
+  margin-left: 10%;
+  margin-right: 10%;
+  height: 90vh;
+  padding: 3vw
+}
+
+div.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+div.centred {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+div.full-width {
+  width: 100%;
+}
+
+/*adapted from w3schools navbar examples */
+nav.topnav ul {
+  list-style-type: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  gap: 15px;
+  overflow: hidden;
+  background-color: #121412;
 }
 
-.topnav ul li {
-  display: inline;
-}
+nav.topnav ul li {float: left;}
 
-.topnav ul li a {
+nav.topnav ul li a {
+  display: block;
+  color: rgb(205, 205, 205);
+  text-align: center;
+  padding: 14px 16px;
   text-decoration: none;
-  color: #333; /* Dark grey for contrast */
-  font-weight: 500;
-  padding: 5px 10px;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Hover Effects */
-.topnav ul li a:hover {
-  background-color: #e0e0e0; /* Slightly darker grey */
-  color: #000; /* Black for hover contrast */
-  border-radius: 5px; /* Subtle rounded corners */
+nav.topnav ul li a:hover:not(.active) {
+  scale: 1.1;
+  transition: 0.3s;
+  background-color: #2b3229;
 }
 
+nav.topnav ul li a.active {
+  background-color: #23331f;
+  scale: 1.1;
+  border: 1px solid black;
+}
+
+nav.topnav ul li.right {float: right;}
+
+@media screen and (max-width: 600px) {
+  nav.topnav ul li.right, 
+  nav.topnav ul li {float: none;}
+}
+/* end navbar */
+
+p {
+  color: aliceblue;
+}
 
 h1 {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 20px;
-    color: darkcyan;
+    color: rgb(0, 105, 24);
 }
 
 h2 {
@@ -76,4 +108,34 @@ a:link {
     background-color: orangered;
     padding:5px;
   }
+
+  
+  /*list page*/
+  #list-heading {
+    font-size: 2vw;
+  }
+
+  .list-button {
+    background-color: #121412;
+    color: rgb(205, 205, 205);
+    text-align: center;
+    width: 10vw;
+    height: 5vw;
+    border: none;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .list-button:hover:not(.activeNow){
+    scale: 1.1;
+    transition: 0.3s;
+    background-color: #2b3229;
+  }
+
+  .list-button.activeNow{
+    scale: 1.1;
+    background-color: #2b3229;
+    border: 1px solid black;
+  }
+
   

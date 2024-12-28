@@ -5,6 +5,23 @@
     <link rel="stylesheet"  type="text/css" href="/main.css" />
   </head>
   <body>
+    <nav class="topnav">
+      <ul>
+        <li><a class="active" href="./"><%=appData.appName%></a></li>
+        <li><a href="list">Lists</a></li> <!--todo-->
+        <li><a class="active" href="search">Search</a></li> <!--todo-->
+        <li><a href="menus/editlist">Edit Menus</a></li> <!--todo-->
+        <li><a href="menus/create">Create</a></li>
+        <li><a href="about">About</a></li>
+      <!--if no user, show login-->
+      <% if(user == null){ %>
+          <li class="right"><a href="users/login">Log in</a></li>
+      <!--if user exists, show logout-->
+      <% } else { %>
+          <li class="right"><a href="logout">Logout</a></li>
+          <% } %>
+      </ul>
+    </nav>
     <!--top nav header with login bar based on session data-->
     <header>
       <nav class="topnav">
@@ -33,47 +50,49 @@
         <% } %>
       </nav>
     </header>
-    <% if(user != null) { %>
-      <h2>Welcome back <%=user%>!</h2>
-    <% } %>
-    <p>Search results:</p>
-    <ul>
-      <% for(let i=0; i<results.length; i++) { %>
-        <li>
-          <% let result = results[i]; %>
-          <% if (type == 'user') { %>
-            <p>Username: <%= result.username ? result.username : 'N/A' %></p>
-            <p>Company: <%= result.company? result.company : 'N/A' %></p>
-            <p>First name: <%= result.first? result.firstName : 'N/A' %></p>
-            <p>Last name: <%= result.last? result.lastName : 'N/A' %></p>
-            
-          <% } else if (type == 'menu') { %>
-            <a class="menu-link" href="/menus/view?menuId=<%=result.menu_id%>" ><p>Menu name: <%= result.menu_name ? result.menu_name : 'N/A' %></p></a>
-            <p>Menu description: <%= result.menu_desc ? result.menu_desc : 'N/A' %></p>
-            <p>Menu creator: <%= result.menu_creator? result.menu_creator : 'N/A' %></p>
-
-          <% } else if (type === 'drink') { %>
-            <p>Drink name: <%=result.drink_name ? result.drink_name : 'N/A' %></p>
-            <p>Method: <%=result.drink_method ? result.drink_method : 'N/A' %></p>
-            <p>Glass: <%=result.drink_glass ? result.drink_glass : 'N/A' %></p>
-            <p>Price: <%=result.drink_price ? result.drink_price : 'N/A' %></p>
-            <ul>
-								<% if (result.ingredients && result.measurements) { %>
-									<% for (let j=0; j<result.ingredients.length; j++) { %>
-										<li class="ingredient-list-item">
-											<p><%=result.ingredients[j] %> : <%=result.measurements[j] %></p>
-										</li>
-									<% } %>
-								<% } else { %>
-									<li>No ingredients or measurements found for this drink.</li>
-								<% } %>
-						</ul>
-            
-          <% } else { %>
-            <p>Error: Unknown result type.</p>
-          <% } %>
-        </li>
+    <main>
+      <% if(user != null) { %>
+        <h2>Welcome back <%=user%>!</h2>
       <% } %>
-    </ul>
+      <p>Search results:</p>
+      <ul>
+        <% for(let i=0; i<results.length; i++) { %>
+          <li>
+            <% let result = results[i]; %>
+            <% if (type == 'user') { %>
+              <p>Username: <%= result.username ? result.username : 'N/A' %></p>
+              <p>Company: <%= result.company? result.company : 'N/A' %></p>
+              <p>First name: <%= result.first? result.firstName : 'N/A' %></p>
+              <p>Last name: <%= result.last? result.lastName : 'N/A' %></p>
+              
+            <% } else if (type == 'menu') { %>
+              <a class="menu-link" href="/menus/view?menuId=<%=result.menu_id%>" ><p>Menu name: <%= result.menu_name ? result.menu_name : 'N/A' %></p></a>
+              <p>Menu description: <%= result.menu_desc ? result.menu_desc : 'N/A' %></p>
+              <p>Menu creator: <%= result.menu_creator? result.menu_creator : 'N/A' %></p>
+  
+            <% } else if (type === 'drink') { %>
+              <p>Drink name: <%=result.drink_name ? result.drink_name : 'N/A' %></p>
+              <p>Method: <%=result.drink_method ? result.drink_method : 'N/A' %></p>
+              <p>Glass: <%=result.drink_glass ? result.drink_glass : 'N/A' %></p>
+              <p>Price: <%=result.drink_price ? result.drink_price : 'N/A' %></p>
+              <ul>
+                  <% if (result.ingredients && result.measurements) { %>
+                    <% for (let j=0; j<result.ingredients.length; j++) { %>
+                      <li class="ingredient-list-item">
+                        <p><%=result.ingredients[j] %> : <%=result.measurements[j] %></p>
+                      </li>
+                    <% } %>
+                  <% } else { %>
+                    <li>No ingredients or measurements found for this drink.</li>
+                  <% } %>
+              </ul>
+              
+            <% } else { %>
+              <p>Error: Unknown result type.</p>
+            <% } %>
+          </li>
+        <% } %>
+      </ul>
+    </main>
   </body>
 </html>

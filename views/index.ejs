@@ -15,30 +15,24 @@
           <li><a href="menus/editlist">Edit Menus</a></li> <!--todo-->
           <li><a href="menus/create">Create</a></li>
           <li><a href="about">About</a></li>
-        </ul>
         <!--if no user, show login-->
         <% if(user == null){ %>
-        <div class="account" id="login">
-          <ul>
-            <li><a href="users/login">Log in</a></li>
-          </ul>
-        </div>
+            <li class="right"><a href="users/login">Log in</a></li>
         <!--if user exists, show logout-->
         <% } else { %>
-        <div class="account" id="logout">
-          <ul>
-            <li><a href="logout">Logout</a></li>
-          </ul>
-        </div>
-        <% } %>
+            <li class="right"><a href="logout">Logout</a></li>
+            <% } %>
+        </ul>
       </nav>
     </header>
-    <% if(user != null) { %>
-      <h2>Welcome back <%=user%>!</h2>
-    <% } %>
-    <p><a href="about">About <%=appData.appName%></a></p>
-    <p><a href="users/register">Register with us</a></p>
-    <p><a href="users/login">Login with us</a></p>
-    <p><a href="logout">Logout here</a></p>
+    <main>
+      <% if(user != null) { %>
+        <h2>Welcome back <%=user%>!</h2>
+      <% } %>
+      <p><a href="about">About <%=appData.appName%></a></p>
+      <p><a href="users/register">Register with us</a></p>
+      <p><a href="users/login">Login with us</a></p>
+      <p><a href="logout">Logout here</a></p>
+    </main>
   </body>
 </html>
