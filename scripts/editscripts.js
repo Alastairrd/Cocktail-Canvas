@@ -142,8 +142,8 @@ function parseCocktailApiResponse(apiResponse) {
 			resDrinkList.push({
 				drink_id: entry.idDrink,
 				drink_name: entry.strDrink,
-				drink_method: entry.strInstructions,
-				drink_glass: entry.strGlass,
+				drink_method: cleanString(entry.strInstructions),
+				drink_glass: cleanString(entry.strGlass),
 				drink_price: 0.0, //set 0 can be edited later
 				ingredients: ingredients,
 				measurements: measurements,
@@ -153,6 +153,13 @@ function parseCocktailApiResponse(apiResponse) {
 
 	return resDrinkList;
 }
+
+function cleanString(str) {
+	//removing unnecessary text from api responses or coming from page
+	return str
+	  .replace(/^Method:\s*/i, "") 
+	  .replace(/^Glass:\s*/i, ""); 
+  }
 
 function listParsedResults(resultList) {
 	//container for search list results
@@ -268,8 +275,8 @@ async function addCocktailToDBFromSearch(event, price) {
 	console.log(children);
 	const data = {
 		add_cocktail_name: children[0].innerText,
-		add_cocktail_method: children[1].innerText,
-		add_cocktail_glass: children[2].innerText,
+		add_cocktail_method: cleanString(children[1].innerText),
+		add_cocktail_glass: cleanString(children[2].innerText),
 		add_cocktail_price: price,
 		ingredients: [],
 		measurements: [],

@@ -29,7 +29,7 @@
     for (i = 0; i < divArray.length; i++) {
       if (divArray[i] == activeDiv) {
         document.getElementById(divArray[i]).style.display =
-          "inline";
+          "flex";
         document.getElementById("list-heading").innerText = "List Page: " + divArray[i].charAt(0).toUpperCase() + divArray[i].substring(1, divArray[i].indexOf("-")) + "s";
       } else {
         document.getElementById(divArray[i]).style.display = "none";
@@ -37,7 +37,7 @@
     }
   }
 
-  function toggleCocktail(selectedDrink){
+  function toggleCocktail(selectedDrink, showButtonId, hideButtonId){
     let item = document.getElementById(selectedDrink)
 
     if(item.getAttribute("activeNow") == 0){
@@ -47,8 +47,10 @@
         glass.setAttribute("style", "display: inline")
         let ingrlist = document.getElementById(selectedDrink).querySelector('.cocktail-item-ingrlist')
         ingrlist.setAttribute("style", "display: inline")
-        let button = document.getElementById(selectedDrink).querySelector('.show-button-drink')
-        button.innerText = "Show less"
+        let button = document.getElementById(showButtonId)
+        button.setAttribute("style", "display: none")
+        let hideButton = document.getElementById(hideButtonId)
+        hideButton.setAttribute("style", "display: inline-block")
         item.setAttribute("activeNow", 1)
     } else {
         let method = document.getElementById(selectedDrink).querySelector('.cocktail-item-method')
@@ -57,8 +59,10 @@
         glass.setAttribute("style", "display: none")
         let ingrlist = document.getElementById(selectedDrink).querySelector('.cocktail-item-ingrlist')
         ingrlist.setAttribute("style", "display: none")
-        let button = document.getElementById(selectedDrink).querySelector('.show-button-drink')
-        button.innerText = "Show more"
+        let button = document.getElementById(showButtonId)
+        button.setAttribute("style", "display: inline-block")
+        let hideButton = document.getElementById(hideButtonId)
+        hideButton.setAttribute("style", "display: none")
         item.setAttribute("activeNow", 0)
     }
   }
