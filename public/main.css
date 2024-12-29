@@ -41,6 +41,12 @@ div.centred {
   transition: 0.3s;
   background-color: #2b3229;
 }
+
+.column-container {
+	display: flex;
+	flex-direction: column;
+}
+
 /*adapted from w3schools navbar examples */
 nav.topnav ul {
 	list-style-type: none;
@@ -314,5 +320,22 @@ a .menu-div:hover {
 .edit-menu-item {
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+/* view menu things */
+.view-menu-div {
+	display: flex;
+	margin: 0;
+	padding: 0;
+	justify-content: center;
+	flex-wrap: wrap;
+	width: 50%;
+}
+
+.view-menu-div ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
 }
 

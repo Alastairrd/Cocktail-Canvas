@@ -3,6 +3,7 @@
 	<head>
 		<title>View Menu: <%=appData.appName%></title>
 		<link rel="stylesheet" type="text/css" href="/main.css" />
+		<script src="/listscripts.js"></script>
 	</head>
 	<body>
 		<nav class="topnav">
@@ -24,42 +25,105 @@
 		  </nav>
 		<main>
 			<!--top banner for view menu-->
-			<div id="view-menu-banner">
+			<div id="view-menu-banner" class="flex-container centred">
 				<h1>Displaying a menu: <%=appData.appName%></h1>
 			</div>
 
 			<!--section for listing current menu-->
-			<div id="view-container">
-				<p>Menu name: <%= menu_name ? menu_name : 'N/A' %></p>
-				<p>Menu description: <%= menu_desc ? menu_desc : 'N/A' %></p>
-				<div id="view-list-container">
-					<div id="current-list-div">
-						<ul>
-							<% if (drinkList.length < 1) { %> <p>No drink data found for menu.</p> <% }%>
-							<% for(i=0; i<drinkList.length; i++) { %>
-								<li>
-									<div class="cocktail-item-div">
-										<p class="cocktail-item-name"><%=drinkList[i].drink_name%></p>
-										<p class="cocktail-item-method">Method: <%=drinkList[i].drink_method%></p>
-										<p class="cocktail-item-glass">Glass: <%=drinkList[i].drink_glass%></p>
-										<p class="cocktail-item-price">Price: £<%=drinkList[i].drink_price%></p>
-										<ul>
-											<% if (drinkList[i].ingredients && drinkList[i].measurements) { %>
-												<% for (let j = 0; j < drinkList[i].ingredients.length; j++) { %>
-													<li class="ingredient-list-item">
-														<p><%= drinkList[i].ingredients[j] %> : <%= drinkList[i].measurements[j] %></p>
-													</li>
-												<% } %>
-											<% } else { %>
-												<li>No ingredients or measurements found for this drink.</li>
-											<% } %>
-										</ul>
-									</div>
-								</li>
-							<% } %>
-						</ul>
-					</div>
+			<div id="view-container" class="flex-container centred">
+				<div class="column-container full-width">
+					<p class="subheading"><%= menu_name ? menu_name : 'N/A' %></p>
+					<p>Menu description: <%= menu_desc ? menu_desc : 'N/A' %></p>
 				</div>
+					<div id="current-list-div" class="view-menu-div">
+					  <% if (drinkList.length < 1) { %> 
+						<p>No drink data found for menu.</p>
+					  <% } else { %>
+						<ul>
+						  <% for (let i = 0; i < drinkList.length; i++) { %>
+							<li>
+							  <!-- Match the same structure / classes / IDs from your original snippet -->
+							  <div 
+								id="drink-div<%= i %>" 
+								class="cocktail-item-div" 
+								activeNow="0"
+							  >
+								<!-- drink name -->
+								<p class="cocktail-item-name">
+								  <%= drinkList[i].drink_name %>
+								</p>
+								<button
+								  id="show-drink-button<%= i %>"
+								  class="drink-button"
+								  onclick="toggleCocktail(
+									'drink-div<%= i %>', 
+									'show-drink-button<%= i %>', 
+									'hide-drink-button<%= i %>'
+								  )"
+								>
+								  v
+								</button>
+								<div class="left-flex">
+								  <p 
+									id="drink-method<%= i %>" 
+									style="display: none"
+									class="cocktail-item-method"
+								  >
+									Method: <%= drinkList[i].drink_method || 'N/A' %>
+								  </p>
+								  <br>
+				  
+								  <p 
+									id="drink-glass<%= i %>" 
+									style="display: none"
+									class="cocktail-item-glass"
+								  >
+									Glass: <%= drinkList[i].drink_glass || 'N/A' %>
+								  </p>
+								  <p
+									id="drink-price<%= i %>"
+									style="display: none"
+									class="cocktail-item-price"
+								  >
+									Price: £<%= drinkList[i].drink_price %>
+								  </p>
+								  <ul
+									id="drink-ingrs<%= i %>"
+									style="display: none"
+									class="cocktail-item-ingrlist"
+								  >
+									<% if (drinkList[i].ingredients && drinkList[i].measurements) { %>
+									  <% for (let j = 0; j < drinkList[i].ingredients.length; j++) { %>
+										<li class="ingredient-list-item">
+										  <p class="ingredient-list-item">
+											<%= drinkList[i].ingredients[j] %> : 
+											<%= drinkList[i].measurements[j] %>
+										  </p>
+										</li>
+									  <% } %>
+									<% } else { %>
+									  <li>No ingredients or measurements found for this drink.</li>
+									<% } %>
+								  </ul>
+								</div>
+								<button
+								  id="hide-drink-button<%= i %>"
+								  class="drink-button"
+								  onclick="toggleCocktail(
+									'drink-div<%= i %>', 
+									'show-drink-button<%= i %>', 
+									'hide-drink-button<%= i %>'
+								  )"
+								  style="display: none"
+								>
+								  ^
+								</button>
+							  </div>
+							</li>
+						  <% } %>
+						</ul>
+					  <% } %>
+					</div>			  
 			</div>
 		</main>
 	</body>
