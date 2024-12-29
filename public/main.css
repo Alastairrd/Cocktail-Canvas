@@ -339,3 +339,127 @@ a .menu-div:hover {
 	width: 100%;
 }
 
+/* edit menu */
+#two-columns {
+	display: flex;
+	justify-content: space-between;
+
+}
+
+.box-left {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	width: 50%;
+	border-right: 2px solid #121412;
+}
+
+.box-right {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	width: 50%;
+}
+
+.edit-menu-div {
+		display: flex !important;
+		margin: 0;
+		padding: 0;
+		justify-content: center;
+		flex-wrap: wrap;
+		width: 100%;
+}
+
+.edit-menu-div ul{
+	list-style-type: none;
+	margin-right: 3vw;
+	padding: 0;
+	max-width: 100%;
+}
+
+#add-ingredient-btn {
+	width: 100%;
+	margin-top: 1vw;
+	margin-bottom: 1vw;
+}
+
+#add-cocktail-form {
+	margin-right: 3vw;
+	max-width: 100%;
+}
+
+#add-cocktail-button {
+	width: 100%;
+	margin-top: 1vw;
+	margin-bottom: 1vw;
+}
+
+.ingredient-pair-div {
+	display: flex;
+	justify-content: space-between;
+}
+
+.text-align-centre{
+	text-align: center;
+}
+
+.search-div {
+	display: flex;
+	justify-content: right;
+}
+
+.search-div form {
+	display: flex;
+	flex-direction: column;
+	width: 25vw;
+	margin-bottom: 3vw ;
+}
+
+.search-div form input{
+	margin-bottom: 1vw;
+}
+
+.search-div form label{
+	margin-top: 1vw;
+	margin-bottom: 1vw;
+}
+
+
+.search-div form label{
+	color: aliceblue;
+}
+
+.result-list-div {
+	display: flex !important;
+	margin: 0;
+	padding: 0;
+	justify-content: center;
+	flex-wrap: wrap;
+	width: 100%;
+}
+
+.result-list-div ul.cocktail-list{
+list-style-type: none;
+margin-left: 3vw;
+padding: 0;
+max-width: 100%;
+}
+
+.flex-row {
+	display: flex;
+	flex-direction: row;
+}
+
+.ingredient-list-item p {
+	margin: 2px;
+	padding: 1px;
+}
+
+.result-list-div ul.ingr-list{
+	list-style-type: none;
+	margin-left: 0;
+	padding: 0;
+	max-width: 100%;
+	}
+
+

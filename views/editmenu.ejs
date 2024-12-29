@@ -12,7 +12,7 @@
 			  <li><a href="../list">Lists</a></li> <!--todo-->
 			  <li><a href="../search">Search</a></li> <!--todo-->
 			  <li><a class="active" href="../menus/editlist">Edit Menus</a></li> <!--todo-->
-			  <li><a href="../menus/create">Create</a></li>
+			  <li><a href="../menus/create">Create Menu</a></li>
 			  <li><a href="../about">About</a></li>
 			<!--if no user, show login-->
 			<% if(user == null){ %>
@@ -30,111 +30,122 @@
 				<p class="subheading">Search for cocktail recipes to add to your menu, or add your own!</p>
 			</div>
 			<div id="two-columns">
-				<div id="column-1">
-
+				<div id="column-1" class="box-left">
+					<div id="add-list-container">
+						<div id="add-div">
+							<!--custom cocktail add form-->
+							<form id="add-cocktail-form" method="POST" action="add-cocktail-to-menu">
+								<!--name-method-price section-->
+								<p class="cocktail-subheading">Custom Cocktail Details</p>
+								<p>
+									<input id=menu_id_holder type="hidden" name="menu_id" value="<%=menu_id%>">
+									Cocktail name:
+									<input
+										id="add_cocktail_name"
+										type="text"
+										name="add_cocktail_name"
+										value=""
+										maxlength="50"
+									/>
+								</p>
+								<p>
+									Cocktail method:
+									<input
+										id="add_cocktail_method"
+										type="text"
+										name="add_cocktail_method"
+										value=""
+										maxlength="256"
+									/>
+								</p>
+								<p>Glass: <input
+									id="add_cocktail_glass"
+									type="text"
+									name="add_cocktail_glass"
+									value=""
+									maxlength="32"
+								/></p>
+								<p>Price: £<input
+									id="add_cocktail_price"
+									type="number"
+									name="add_cocktail_price"
+									value="0.00"
+									max="99999.99"
+									min="0"
+									step="0.01"
+								/></p>
+								<!--ingredient and measures section-->
+								<div id="ingredients-container">
+									<p class="cocktail-subheading">
+											Ingredients and Measurements
+									</p>
+									<!--ingredients / measures go here-->
+								</div>
+								<button class="basic-button" type="button" id="add-ingredient-btn">Add Ingredient</button>
+			
+			
+								<input id="add-cocktail-button" class="basic-button" type="submit" value="Add cocktail to menu" />
+							</form>
+						</div>
+						<div id="current-list-div" class="edit-menu-div">
+							<ul>
+								<% for(i=0; i<drinkList.length; i++) { %>
+									<li>
+										<div class="cocktail-item-div">
+											<div class="text-align-centre">
+												<p class="cocktail-item-name edit-menu-cocktail" drinkId="<%=drinkList[i].drink_id%>"><%=drinkList[i].drink_name%></p>
+											</div>
+											<p class="cocktail-item-method">Method: <%=drinkList[i].drink_method%></p>
+											<p class="cocktail-item-glass">Glass: <%=drinkList[i].drink_glass%></p>
+											<p class="cocktail-item-price">Price: £<%=drinkList[i].drink_price%></p>
+											<ul>
+												<% if (drinkList[i].ingredients && drinkList[i].measurements) { %>
+													<% for (let j = 0; j < drinkList[i].ingredients.length; j++) { %>
+														<li class="ingredient-list-item">
+															<p><%= drinkList[i].ingredients[j] %> : <%= drinkList[i].measurements[j] %></p>
+														</li>
+													<% } %>
+												<% } else { %>
+													<li>No ingredients or measurements found for this drink.</li>
+												<% } %>
+											</ul>
+											<button class="basic-button full-width" onclick="removeDrinkFromMenu(event)">Remove</button>
+										</div>
+									</li>
+								<% } %>
+							</ul>
+						</div>
+					</div>
 				</div>
-				<div id="column-2">
-
+				<div id="column-2" class="box-right">
+					<!--cocktail db API search section-->
+						<div class="search-div">
+							<!--fetch function to get api data for cokctail search-->
+							<form id="cocktailAPISearch" onsubmit="onlineDBFetch(event)">
+								<label>Search TheCocktailDB for a cocktail recipe online:</label>
+								<input type="text" id="api-keyword" placeholder="Search for a cocktail" required>
+								<button class="basic-button" type="submit">Search</button>
+							</form>
+						</div>
+						<!--cocktail db API search section-->
+						<div class="search-div">
+							<!--fetch function to get api data for cokctail search-->
+							<form id="internalDBSearch" onsubmit="internalDBFetch(event)">
+								<label>Search Cocktail Canvas for an existing drink:</label>
+								<input type="text" id="internal-keyword" placeholder="Search for a cocktail" required>
+								<button class="basic-button" type="submit">Search</button>
+							</form>
+						</div>
+						<div id="result-list-container">
+					
+						</div>
 				</div>
 			</div>
 
 			<!--section for listing current menu and adding a custom cocktail-->
 			<div id="edit-container">
-				<div id="add-list-container">
-					<div id="add-div">
-						<!--custom cocktail add form-->
-						<form method="POST" action="add-cocktail-to-menu">
-							<!--name-method-price section-->
-							<p class="cocktail-subheading">Custom Cocktail Details</p>
-							<p>
-								<input id=menu_id_holder type="hidden" name="menu_id" value="<%=menu_id%>">
-								Cocktail name:
-								<input
-									id="add_cocktail_name"
-									type="text"
-									name="add_cocktail_name"
-									value=""
-									maxlength="50"
-								/>
-							</p>
-							<p>
-								Cocktail method:
-								<input
-									id="add_cocktail_method"
-									type="text"
-									name="add_cocktail_method"
-									value=""
-									maxlength="256"
-								/>
-							</p>
-							<p>Glass: <input
-								id="add_cocktail_glass"
-								type="text"
-								name="add_cocktail_glass"
-								value=""
-								maxlength="32"
-							/></p>
-							<p>Price: £<input
-								id="add_cocktail_price"
-								type="number"
-								name="add_cocktail_price"
-								value="0.00"
-								max="99999.99"
-								min="0"
-								step="0.01"
-							/></p>
-							<!--ingredient and measures section-->
-							<div id="ingredients-container">
-								<p class="cocktail-subheading">
-										Ingredients and Measurements
-								</p>
-								<!--ingredients / measures go here-->
-						</div>
-						<button type="button" id="add-ingredient-btn">Add Ingredient</button>
-
-
-						<input type="submit" value="Create" />
-						</form>
-					</div>
-					<div id="current-list-div">
-						<ul>
-							<% for(i=0; i<drinkList.length; i++) { %>
-								<li>
-									<div class="cocktail-item-div">
-										<p class="cocktail-item-name"><%=drinkList[i].drink_name%></p>
-										<p class="cocktail-item-method">Method: <%=drinkList[i].drink_method%></p>
-										<p class="cocktail-item-glass">Glass: <%=drinkList[i].drink_glass%></p>
-										<p class="cocktail-item-price">Price: £<%=drinkList[i].drink_price%></p>
-										<ul>
-											<% if (drinkList[i].ingredients && drinkList[i].measurements) { %>
-												<% for (let j = 0; j < drinkList[i].ingredients.length; j++) { %>
-													<li class="ingredient-list-item">
-														<p><%= drinkList[i].ingredients[j] %> : <%= drinkList[i].measurements[j] %></p>
-													</li>
-												<% } %>
-											<% } else { %>
-												<li>No ingredients or measurements found for this drink.</li>
-											<% } %>
-										</ul>
-									</div>
-								</li>
-							<% } %>
-						</ul>
-					</div>
-				</div>
-				<!--cocktail db API search section-->
-				<div id="search-list-container">
-					<div id="search-div">
-						<!--fetch function to get api data for cokctail search-->
-						<form id="cocktailAPISearch" onsubmit="cocktailDBFetch(event)">
-							<input type="text" id="keyword" placeholder="Search for a cocktail" required>
-							<button type="submit">Search</button>
-						</form>
-					</div>
-					<div id="result-list-container">
 				
-					</div>
-				</div>
+				
 			</div>
 		</main>
 	</body>

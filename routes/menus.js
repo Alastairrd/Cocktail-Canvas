@@ -32,7 +32,7 @@ router.get("/view", async function (req, res, next) {
 			});
 		});
 	} catch (error) {
-		res.render("error.ejs", { message: error });
+		res.render("error.ejs", { user: req.session.user, message: error });
 		return;
 	}
 
@@ -201,13 +201,39 @@ router.post(
 	"/add-cocktail-to-menu",
 	redirectLogin,
 	async function (req, res, next) {
-		console.log("made it into request");
-		console.log(req.body);
+		try {
+			//if cocktail exists in db already
+			if (req.body.drink_id != -1) {
+				const sqlquery = `CALL add_existing_cocktail_to_menu(?, ?)`;
+				const params = [req.body.drink_id, req.body.menu_id];
+
+				results = await new Promise((resolve, reject) => {
+					db.query(sqlquery, params, (error, results) => {
+						if (error) {
+							console.log(error);
+							reject(error);
+						} else {
+							resolve(results);
+						}
+					});
+				});
+				console.log(results);
+
+				res.redirect(`/menus/editmenu?menu_id=${req.body.menu_id}`);
+				return;
+			}
+		} catch (error) {
+			console.log(error);
+			res.render("error.ejs", { user: req.session.user, message: error });
+			return;
+		}
+
+		//else add new cocktail to db
 		//setup variables
-		const cocktailName = req.body.add_cocktail_name;
-		const cocktailMethod = req.body.add_cocktail_method;
-		const cocktailGlass = req.body.add_cocktail_glass;
-		const cocktailPrice = req.body.add_cocktail_price;
+		const cocktailName = req.body.drink_name;
+		const cocktailMethod = req.body.drink_method;
+		const cocktailGlass = req.body.drink_glass;
+		const cocktailPrice = req.body.drink_price;
 		const jsonIngrMeas = JSON.stringify({
 			ingredients: req.body.ingredients,
 			measurements: req.body.measurements,
@@ -235,8 +261,62 @@ router.post(
 				}
 			});
 		});
+		console.log(results);
 
 		res.redirect(`/menus/editmenu?menu_id=${menuId}`);
+	}
+);
+
+router.post(
+	"/remove-cocktail-from-menu",
+	redirectLogin,
+	async function (req, res, next) {
+		try {
+			console.log(req.body);
+			const menuId = req.body.menu_id;
+
+			let sqlQuery = `CALL check_menu_against_user(?,?)`;
+			let params = [menuId, req.session.user_id];
+			console.log(params);
+			checkResults = await new Promise((resolve, reject) => {
+				db.query(sqlQuery, params, (error, results) => {
+					if (error) {
+						reject(error);
+					} else {
+						resolve(results);
+					}
+				});
+			});
+
+			//if not owner of menu
+			if (!checkResults[0][0].is_owner) {
+				console.log("not owner");
+				res.status(403).send("User is not owner of menu.");
+				return;
+			}
+			console.log("is owner");
+
+			sqlQuery = `CALL remove_drink_from_menu(?, ?)`;
+			params = [req.body.drink_id, req.body.menu_id];
+			//query db for current menu list
+			results = await new Promise((resolve, reject) => {
+				db.query(sqlQuery, params, (error, results) => {
+					if (error) {
+						reject(error);
+						res.status(500).send(
+							"Unable to remove drink from menu."
+						);
+						return;
+					} else {
+						resolve(results);
+
+						res.status(200).send("OK");
+					}
+				});
+			});
+		} catch (error) {
+			res.status(500).send(error.message);
+		}
 	}
 );
 

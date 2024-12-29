@@ -161,7 +161,7 @@ router.post("/searchresult", async function (req, res, next) {
 	} else if (searchtype == "drink") {
 		sqlquery = `CALL search_for_drink(?)`;
 	} else {
-		res.render("error.ejs", { message: "Unknown search type." });
+		res.render("error.ejs", { user: req.session.user, message: "Unknown search type." });
 	}
 
 	if (sqlquery != "") {
@@ -195,7 +195,6 @@ router.post("/searchresult", async function (req, res, next) {
 									drink_name: entry.drink_name,
 									drink_method: entry.drink_method,
 									drink_glass: entry.glass_name,
-									drink_price: entry.price,
 									ingredients: [entry.ingr_name],
 									measurements: [entry.measure],
 								});
