@@ -442,7 +442,7 @@ a .menu-div:hover {
 list-style-type: none;
 margin-left: 3vw;
 padding: 0;
-max-width: 100%;
+width: 100%;
 }
 
 .flex-row {
@@ -461,5 +461,10 @@ max-width: 100%;
 	padding: 0;
 	max-width: 100%;
 	}
+
+#error-container p {
+	margin: 1px;
+	padding: 1px;
+}
 
 

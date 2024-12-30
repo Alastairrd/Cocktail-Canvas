@@ -31,6 +31,14 @@
         </div>
         <div id="menu-list-div" class="list-div">
           <ul>
+            <%if(menuList.length < 1) { %>
+              <p>No menus found.</p>
+              <form action="../menus/create" method="GET">
+                <button type="submit" class="basic-button">
+                  Create Menu
+                </button>
+              </form>
+            <% } %>
             <% menuList.forEach(function(menu) { %>
               <li class="edit-menu-item">
                 <a

@@ -25,13 +25,20 @@
     <main>
       <div class="flex-container centred">
         <h1 class="heading full-width" >Register for <%=appData.appName%></h1>
-        <form method="POST" action="registered">
+        <% if(errors && errors.length > 0) { %>
+          <% for(let i=0; i<errors.length; i++) { %>
+            <p class="full-width">Error: <%=errors[i].msg%> at (<%=errors[i].path%>)</p>
+          <% } %>
+        <% } %>
+        <form method="POST" action="register" autocomplete="off">
+          
+          <p>Fields marked with * are required.</p><br>
+          <p>* Username: <input id="username" type="text" name="username" value="" minlength ="8" maxlength="16" required/></p>
+          <p>* Password: <input id="password" type="password" name="password" value="" minlength ="8" maxlength="24" required/></p>
+          <p>* Email: <input id="email" type="email" name="email" required></p>
           <p>First name: <input id="first" type="text" name="first" /></p>
           <p>Last name: <input id="last" type="text" name="last"/></p>
-          <p>Email: <input id="email" type="text" name="email"/></p>
-          <p>Email: <input id="company" type="text" name="company"/></p>
-          <p>Username: <input id="username" type="text" name="username" value="" minlength ="8" maxlength="16" /></p>
-          <p>Password: <input id="password" type="password" name="password" value="" minlength ="8" maxlength="24" /></p>
+          <p>Company: <input id="company" type="text" name="company"/></p>
           <input class="basic-button" type="submit" value="Register" />
         </form>
       </div>  

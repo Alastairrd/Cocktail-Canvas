@@ -1,6 +1,7 @@
 // Create a new router
 const express = require("express");
 const router = express.Router();
+const { check, validationResult } = require("express-validator");
 
 router.get("/view", async function (req, res, next) {
 	const menuId = req.query.menuId;
@@ -76,33 +77,55 @@ router.get("/view", async function (req, res, next) {
 router.get("/create", redirectLogin, function (req, res, next) {
 	let sessionData = {
 		user: req.session.user,
+		errors: [],
 	};
 
 	res.render("createmenu.ejs", sessionData);
 });
 
-router.post("/create", redirectLogin, async function (req, res, next) {
-	//setup variables
-	const menuName = req.body.menu_name;
-	const menuDesc = req.body.menu_desc;
-	const userId = req.session.user_id;
+router.post(
+	"/create",
+	redirectLogin,
+	[
+		check("menu_name").notEmpty().trim().escape().isLength({ max: 50 }),
 
-	//variables for query
-	const sqlquery = `CALL create_menu_proc(?,?,?)`;
-	const params = [menuName, menuDesc, userId];
+		check("menu_desc").trim().escape().isLength({ max: 256 }),
+	],
+	async function (req, res, next) {
+		//validation errors
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			console.log(errors);
+			console.log(req.body.menu_name.length);
+			res.render("createmenu.ejs", {
+				errors: errors.array(),
+				user: req.session.user,
+			});
+			return;
+		}
 
-	results = await new Promise((resolve, reject) => {
-		db.query(sqlquery, params, (error, results) => {
-			if (error) {
-				reject(error);
-			} else {
-				resolve(results);
-			}
+		//setup variables
+		const menuName = req.body.menu_name;
+		const menuDesc = req.body.menu_desc;
+		const userId = req.session.user_id;
+
+		//variables for query
+		const sqlquery = `CALL create_menu_proc(?,?,?)`;
+		const params = [menuName, menuDesc, userId];
+
+		results = await new Promise((resolve, reject) => {
+			db.query(sqlquery, params, (error, results) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(results);
+				}
+			});
 		});
-	});
 
-	res.redirect("/editlist");
-});
+		res.redirect("../menus/editlist");
+	}
+);
 
 router.get("/editmenu", redirectLogin, async function (req, res, next) {
 	const menuId = req.query.menu_id;
@@ -171,6 +194,7 @@ router.get("/editmenu", redirectLogin, async function (req, res, next) {
 		drinkList: resDrinkList,
 		menu_id: menuId,
 		user: req.session.user,
+		errors: []
 	};
 	res.render("editmenu.ejs", menuData);
 });
@@ -180,13 +204,18 @@ router.get("/editlist", redirectLogin, async function (req, res, next) {
 	const userId = req.session.user_id;
 	const sqlquery = `CALL get_menu_list_for_user(?)`;
 
+	console.log(userId);
+
+
 	//query db for current menu list
 	results = await new Promise((resolve, reject) => {
 		db.query(sqlquery, userId, (error, results) => {
 			if (error) {
 				reject(error);
+				console.log(error.message);
 			} else {
 				resolve(results);
+				console.log(results);
 			}
 		});
 	});
@@ -200,7 +229,102 @@ router.get("/editlist", redirectLogin, async function (req, res, next) {
 router.post(
 	"/add-cocktail-to-menu",
 	redirectLogin,
+	[
+		check("drink_name")
+			.notEmpty()
+			.withMessage("Drink name must not be empty.")
+			.trim()
+			.escape()
+			.isLength({ max: 64 })
+			.withMessage("Drink name cannot be more than 64 characters."),
+
+		check("drink_method")
+			.notEmpty()
+			.withMessage("Method must not be empty.")
+			.trim()
+			.escape()
+			.isLength({ max: 512 })
+			.withMessage("Method cannot be more than 512 characters."),
+
+		check("drink_glass")
+			.notEmpty()
+			.withMessage("Glass must not be empty.")
+			.trim()
+			.escape()
+			.isLength({ max: 32 })
+			.withMessage("Glass name cannot be more than 32 characters."),
+
+		//validate ingredients array
+		check("ingredients")
+			.isArray({ min: 1 })
+			.withMessage("At least one ingredient is required."),
+
+		//validate each ingredient
+		check("ingredients.*")
+			.trim()
+			.notEmpty()
+			.withMessage("Ingredient cannot be empty.")
+			.isLength({ max: 50 })
+			.withMessage("Ingredient cannot be more than 50 characters.")
+			.escape(),
+
+		//check measurements array
+		check("measurements")
+			.isArray({ min: 1 })
+			.withMessage("At least one measurement is required."),
+
+		//measurement validation for array entries
+		check("measurements.*")
+			.trim()
+			.notEmpty()
+			.withMessage("Measurement cannot be empty.")
+			.isLength({ max: 50 })
+			.withMessage("Measurement canot be more than 50 characters.")
+			.escape(),
+
+		//check ingredients and measurements have same length
+		check().custom((value, { req }) => {
+
+			//check they are arrays first before length comparison
+			if (!Array.isArray(req.body.ingredients) || !Array.isArray(req.body.measurements)) {
+				return true;
+			}
+
+			if (req.body.ingredients.length !== req.body.measurements.length) {
+				throw new Error(
+					"Ingredients and measurements count must match."
+				);
+			}
+			return true;
+		}),
+	],
 	async function (req, res, next) {
+		//validation errors
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			const menuId = req.body.menu_id;
+			const sqlQuery = `CALL check_menu_against_user(?,?)`;
+			let params = [menuId, req.session.user_id];
+			checkResults = await new Promise((resolve, reject) => {
+				db.query(sqlQuery, params, (error, results) => {
+					if (error) {
+						reject(error);
+					} else {
+						resolve(results);
+					}
+				});
+			});
+
+			//if not owner of menu
+			if (!checkResults[0][0].is_owner) {
+				res.status(400).json({ errors: [{msg: "Menu does not belong to this user.", path: "menu"}] });
+				return;
+			}
+
+			res.status(400).json({ errors: errors.array() });
+			return;
+		}
+
 		try {
 			//if cocktail exists in db already
 			if (req.body.drink_id != -1) {
@@ -219,14 +343,16 @@ router.post(
 				});
 				console.log(results);
 
-				res.redirect(`/menus/editmenu?menu_id=${req.body.menu_id}`);
+				res.status(200).send("OK");
 				return;
 			}
 		} catch (error) {
 			console.log(error);
-			res.render("error.ejs", { user: req.session.user, message: error });
+			res.status(400).json({ errors: [{msg: error.message, path: "internal"}] });
 			return;
 		}
+
+		console.log(req.body);
 
 		//else add new cocktail to db
 		//setup variables
@@ -250,20 +376,22 @@ router.post(
 			jsonIngrMeas,
 			menuId,
 		];
-
+		console.log(params);
 		results = await new Promise((resolve, reject) => {
 			db.query(sqlquery, params, (error, results) => {
 				if (error) {
 					console.log(error);
 					reject(error);
+					res.status(400).json({ errors: [{msg: error.message, path: "internal"}] });
 				} else {
 					resolve(results);
 				}
 			});
 		});
 		console.log(results);
+		console.log(results.warningStatus);
 
-		res.redirect(`/menus/editmenu?menu_id=${menuId}`);
+		res.status(200).send("OK");
 	}
 );
 

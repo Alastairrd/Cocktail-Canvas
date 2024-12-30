@@ -22,12 +22,18 @@
           <% } %>
       </ul>
     </nav>
-    <!--error message displays if redirected with failed login-->
-    <% if(loginFailed == true) { %>
-      <p>Account not found, or incorrect details, please try again.</p>
-    <% } %>
+    
     <main>
       <div class="flex-container centred">
+        <!--error message displays if redirected with failed login-->
+        <% if(loginFailed == true) { %>
+          <p>Account not found, or incorrect details, please try again.</p>
+        <% } %>
+        <% if(errors && errors.length > 0) { %>
+          <% for(let i=0; i<errors.length; i++) { %>
+            <p class="full-width">Error: <%=errors[i].msg%></p>
+          <% } %>
+        <% } %>
         <h1 class="full-width">Log in for <%=appData.appName%></h1>
         <form method="POST" action="login">
           <p>Username: <input id="username" type="text" name="username" value="" maxlength="16" /></p>

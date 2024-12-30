@@ -28,6 +28,8 @@
 			<div id="edit-menu-banner" class="flex-container centred">
 				<h1 class="heading full-width">Edit a menu: <%=appData.appName%></h1>
 				<p class="subheading">Search for cocktail recipes to add to your menu, or add your own!</p>
+				<div id="error-container" class="flex-container centred full-width">
+				</div>
 			</div>
 			<div id="two-columns">
 				<div id="column-1" class="box-left">
@@ -39,11 +41,13 @@
 								<p class="cocktail-subheading">Custom Cocktail Details</p>
 								<p>
 									<input id=menu_id_holder type="hidden" name="menu_id" value="<%=menu_id%>">
+									<input id=drink_list_holder type="hidden" name="drink_list" value="<%=drinkList%>">
+									<input id=drink_id_holder type="hidden" name="drink_id" value="<%=-1%>">
 									Cocktail name:
 									<input
 										id="add_cocktail_name"
 										type="text"
-										name="add_cocktail_name"
+										name="drink_name"
 										value=""
 										maxlength="50"
 									/>
@@ -53,7 +57,7 @@
 									<input
 										id="add_cocktail_method"
 										type="text"
-										name="add_cocktail_method"
+										name="drink_method"
 										value=""
 										maxlength="256"
 									/>
@@ -61,14 +65,14 @@
 								<p>Glass: <input
 									id="add_cocktail_glass"
 									type="text"
-									name="add_cocktail_glass"
+									name="drink_glass"
 									value=""
 									maxlength="32"
 								/></p>
 								<p>Price: £<input
 									id="add_cocktail_price"
 									type="number"
-									name="add_cocktail_price"
+									name="drink_price"
 									value="0.00"
 									max="99999.99"
 									min="0"
@@ -76,6 +80,7 @@
 								/></p>
 								<!--ingredient and measures section-->
 								<div id="ingredients-container">
+									<datalist id="ingredientSuggestions"></datalist>
 									<p class="cocktail-subheading">
 											Ingredients and Measurements
 									</p>

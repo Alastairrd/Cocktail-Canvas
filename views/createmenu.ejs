@@ -1,34 +1,65 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>Create Menu: <%=appData.appName%></title>
-    <link rel="stylesheet"  type="text/css" href="/main.css" />
-  </head>
-  <body>
-    <nav class="topnav">
-      <ul>
-        <li><a href="../"><%=appData.appName%></a></li>
-        <li><a href="../list">Lists</a></li> <!--todo-->
-        <li><a href="../search">Search</a></li> <!--todo-->
-        <li><a href="../menus/editlist">Edit Menus</a></li> <!--todo-->
-        <li><a class="active" href="../menus/create">Create Menu</a></li>
-        <li><a href="../about">About</a></li>
-      <!--if no user, show login-->
-      <% if(user == null){ %>
-          <li class="right"><a href="../users/login">Log in</a></li>
-      <!--if user exists, show logout-->
-      <% } else { %>
-          <li class="right"><a href="../logout">Logout</a></li>
+	<head>
+		<title>Create Menu: <%=appData.appName%></title>
+		<link rel="stylesheet" type="text/css" href="/main.css" />
+	</head>
+	<body>
+		<nav class="topnav">
+			<ul>
+				<li><a href="../"><%=appData.appName%></a></li>
+				<li><a href="../list">Lists</a></li>
+				<!--todo-->
+				<li><a href="../search">Search</a></li>
+				<!--todo-->
+				<li><a href="../menus/editlist">Edit Menus</a></li>
+				<!--todo-->
+				<li>
+					<a class="active" href="../menus/create">Create Menu</a>
+				</li>
+				<li><a href="../about">About</a></li>
+				<!--if no user, show login-->
+				<% if(user == null){ %>
+				<li class="right"><a href="../users/login">Log in</a></li>
+				<!--if user exists, show logout-->
+				<% } else { %>
+				<li class="right"><a href="../logout">Logout</a></li>
+				<% } %>
+			</ul>
+		</nav>
+		<main>
+			<div class="flex-container centred">
+				<h1 class="heading full-width">Create a menu: <%=appData.appName%></h1>
+        <% if(errors && errors.length > 0) { %>
+          <% for(let i=0; i<errors.length; i++) { %>
+            <p class="full-width">Error: <%=errors[i].msg%> at (<%=errors[i].path%>)</p>
           <% } %>
-      </ul>
-    </nav>
-    <main>
-      <h1>Create a menu: <%=appData.appName%></h1>
-      <form method="POST" action="create">
-        <p>Menu name: <input id="menu_name" type="text" name="menu_name" value="" maxlength="50" /></p>
-        <p>Menu description: <input id="menu_desc" type="text" name="menu_desc" value="" maxlength="256" /></p>
-        <input type="submit" value="Create" />
-      </form>
-    </main>
-  </body>
+        <% } %>
+				<form method="POST" action="create">
+					<p>
+						Menu name:
+						<input
+							id="menu_name"
+							type="text"
+							name="menu_name"
+							value=""
+							maxlength="50"
+              required
+						/>
+					</p>
+					<p>
+						Menu description:
+						<input
+							id="menu_desc"
+							type="text"
+							name="menu_desc"
+							value=""
+							maxlength="256"
+						/>
+					</p>
+					<input class="basic-button full-width" type="submit" value="Create" />
+				</form>
+			</div>
+		</main>
+	</body>
 </html>

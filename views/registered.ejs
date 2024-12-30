@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <title>About <%=appData.appName%></title>
+    <link rel="stylesheet"  type="text/css" href="/main.css" />
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li><a href="../"><%=appData.appName%></a></li>
+        <li><a href="../list">Lists</a></li> <!--todo-->
+        <li><a href="../search">Search</a></li> <!--todo-->
+        <li><a href="../menus/editlist">Edit Menus</a></li> <!--todo-->
+        <li><a href="../menus/create">Create Menu</a></li>
+        <li><a href="../about">About</a></li>
+      <!--if no user, show login-->
+      <% if(user == null){ %>
+          <li class="right"><a class="active" href="../users/login">Log in</a></li>
+      <!--if user exists, show logout-->
+      <% } else { %>
+          <li class="right"><a class="active" href="../logout">Logout</a></li>
+          <% } %>
+      </ul>
+    </nav>
+    <main>
+      <div>
+        <h1 class="heading">Registered for <%=appData.appName%></h1>
+        <p><%=message%></p>
+        <p>We hope you enjoy using Cocktail Canvas, happy menu making!</p>
+      </div>
+        <hr>
+      </div>
+    </main>
+  </body>
+</html>

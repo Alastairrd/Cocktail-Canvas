@@ -59,11 +59,6 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 		});
 
-		//data list for the suggestions to be held
-		existingDataList = document.createElement("datalist");
-		existingDataList.id = "ingredientSuggestions";
-		document.body.appendChild(existingDataList);
-
 		//measurement input element, set length constraint, measurements as array to take multiple
 		const measurementInput = document.createElement("input");
 		measurementInput.type = "text";
@@ -179,7 +174,7 @@ function parseCocktailApiResponse(apiResponse) {
 	//init the drink list for response
 	let resDrinkList = [];
 
-	if(apiResponse.drinks == null){
+	if (apiResponse.drinks == null) {
 		return resDrinkList;
 	}
 
@@ -245,10 +240,10 @@ function listParsedResults(resultList) {
 	ulObject.classList.add("cocktail-list");
 	listContainer.appendChild(ulObject);
 
-	if(resultList.length < 1){
-		let message = document.createElement("p")
-		message.innerText = "No results found."
-		ulObject.appendChild(message)
+	if (resultList.length < 1) {
+		let message = document.createElement("p");
+		message.innerText = "No results found.";
+		ulObject.appendChild(message);
 	}
 
 	resultList.forEach((result) => {
@@ -404,7 +399,7 @@ async function duplicateDrinkCheck(data) {
 				"ingredients",
 				"measurements",
 			];
-			for(const entry of parsedData){
+			for (const entry of parsedData) {
 				let allMatch = true;
 
 				for (let i = 0; i < paramList.length; i++) {
@@ -416,14 +411,20 @@ async function duplicateDrinkCheck(data) {
 							JSON.stringify(entry[param]) !=
 							JSON.stringify(data[param])
 						) {
-							console.log(`${JSON.stringify(entry[param])} doesn't match ${JSON.stringify(data[param])}`);
+							console.log(
+								`${JSON.stringify(
+									entry[param]
+								)} doesn't match ${JSON.stringify(data[param])}`
+							);
 							allMatch = false;
 							break;
 						}
 					} else {
 						//otherwise normal check
 						if (entry[param] != data[param]) {
-							console.log(`${entry[param]} doesn't match ${data[param]}`);
+							console.log(
+								`${entry[param]} doesn't match ${data[param]}`
+							);
 							allMatch = false;
 							break;
 						}
@@ -431,12 +432,16 @@ async function duplicateDrinkCheck(data) {
 				}
 
 				if (allMatch) {
-					console.log(`debug: match found with ${entry.drink_name} and ${data.drink_name}`);
+					console.log(
+						`debug: match found with ${entry.drink_name} and ${data.drink_name}`
+					);
 					drinkId = entry.drink_id;
-					console.log(`returning matched drink id with value of ${drinkId}`);
+					console.log(
+						`returning matched drink id with value of ${drinkId}`
+					);
 					return drinkId;
 				}
-			};
+			}
 			return drinkId;
 		} else {
 			console.log("http error: ", response.status); //log response if not
@@ -571,3 +576,69 @@ async function removeDrinkFromMenu(event) {
 		console.error(error);
 	}
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+	document
+		.getElementById("add-cocktail-form")
+		.addEventListener("submit", async function (event) {
+			//stop default submission of form
+			event.preventDefault();
+
+			const errorContainer = document.getElementById("error-container");
+			//clear previous error messages
+			errorContainer.innerHTML = "";
+
+			const form = event.target;
+			const formData = new FormData(form);
+
+			//convert the form to json data
+			const data = {};
+			formData.forEach((value, key) => {
+				if (key.endsWith("[]")) {
+					//if array
+					const cleanKey = key.slice(0, -2); //remove array tags
+					if (!data[cleanKey]) data[cleanKey] = []; //initialise array in data
+					data[cleanKey].push(value); //add value to array
+				} else {
+					data[key] = value;
+				}
+			});
+
+			try {
+				const response = await fetch(form.action, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(data),
+				});
+
+				console.log(response);
+
+				if (response.ok) {
+					const menu_id = form.querySelector(
+						'input[name="menu_id"]'
+					).value;
+					window.location.href = `/menus/editmenu?menu_id=${menu_id}`;
+				} else if (response.status == 400) {
+					console.log("hit a 400");
+					const result = await response.json();
+					if (result.errors && Array.isArray(result.errors)) {
+						//if we have errors and they are an array
+						result.errors.forEach((error) => {
+							//create error messages to be displayed
+							const p = document.createElement("p");
+							p.classList.add("full-width");
+							p.textContent = `Error: ${error.msg} at (${error.path})`;
+							errorContainer.appendChild(p);
+						});
+					}
+				} else {
+					errorContainer.innerHTML =
+						'<p class="full-width">An unexpected error occurred.</p>';
+				}
+			} catch (error) {
+				console.error("Fetch error:", error);
+				errorContainer.innerHTML =
+					'<p class="full-width">Failed to submit. Please try again.</p>';
+			}
+		});
+});

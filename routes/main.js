@@ -139,7 +139,7 @@ router.get("/list", async function (req, res, next) {
 	
 });
 
-router.get("/search", function (req, res, next) {
+router.get("/search",function (req, res, next) {
 	let sessionData = {
 		user: req.session.user,
 	};

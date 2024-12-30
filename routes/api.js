@@ -63,22 +63,57 @@ router.get("/users", async function (req, res, next) {
 	res.json(apiData);
 });
 
+
 router.post(
-	"/users/register",
+	"/register",
 	[
-		check("email").isLength({max: 320}).isEmail(),
+		check("email").isEmail().normalizeEmail().trim(),
+
 		check("password").isLength({ min: 8, max: 24 }).notEmpty(),
-		check("username").isLength({ min: 8, max: 16 }).notEmpty(),
-		check("company").isLength({ max: 64 }),
-		check("first").isLength({max: 20}),
-		check("last").isLength({max: 30}),
+
+		check("username")
+			.notEmpty()
+			.trim()
+			.escape()
+			.isLength({ min: 8, max: 16 }),
+
+		check("company").trim().escape().isLength({ max: 64 }),
+
+		check("first").trim().escape(),
+		check("last").trim().escape(),
 	],
-	function (req, res, next) {
+	async function (req, res, next) {
+		//input validation errors
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			console.log(errors);
-			res.json({error: errors});
+			res.json({
+				errors: errors.array()
+			});
+			return;
 		} else {
+			//check username is unique
+			const username = req.body.username;
+			let params = [username];
+			let sqlquery =
+			`CALL get_user_login_details(?)`;
+			const results = await new Promise((resolve, reject) => {
+				db.query(sqlquery, params, (error, results) => {
+					if (error) {
+						reject(error);
+					} else {
+						resolve(results);
+					}
+				});
+			});
+
+			//if user found for that username
+			if (results[0].length != 0) {
+				res.json({
+					errors: { msg: "Username taken.", path: "username" }
+				});
+				return;
+			}
 			//salting and hashing password
 			const saltRounds = 10;
 			const plainPassword = req.body.password;
@@ -89,12 +124,12 @@ router.post(
 				function (err, hashedPassword) {
 					// Store hashed password in your database.
 					let sqlquery =
-						"INSERT INTO users (username, firstName, lastName, email, company, hashedPassword) VALUES (?,?,?,?,?,?)";
+						`CALL create_user(?,?,?,?,?,?)`;
 					// execute sql query
 					let newrecord = [
-						req.sanitize(req.body.username),
-						req.sanitize(req.body.first),
-						req.sanitize(req.body.last),
+						req.body.username,
+						req.body.first,
+						req.body.last,
 						req.body.email,
 						req.body.company,
 						hashedPassword,
@@ -123,7 +158,7 @@ router.post(
 
 //user get
 router.get("/users/get", async function (req, res, next) {
-	const menuId = req.query.user_id;
+	const menuId = req.sanitize(req.query.user_id);
 	let userInfo;
 
 	try {
@@ -138,7 +173,7 @@ router.get("/users/get", async function (req, res, next) {
 			});
 		});
 	} catch (error) {
-		res.render("error.ejs", {message: error})
+		res.json({error: error.message})
 		return;
 	}
 
@@ -152,7 +187,7 @@ router.get("/users/search", async function (req, res, next) {
 	let sqlquery = `CALL search_for_user(?)`;
 
 	results = await new Promise((resolve, reject) => {
-		db.query(sqlquery, req.query.keyword, (error, results) => {
+		db.query(sqlquery, req.sanitize(req.query.keyword), (error, results) => {
 			if (error) {
 				reject(error);
                 res.json({error: error});
@@ -172,7 +207,6 @@ router.get("/users/search", async function (req, res, next) {
 //list all users
 router.get("/users/list", async function (req, res, next) {
 	let sqlquery = `CALL get_all_users()`;
-	//todo include count
 
 	results = await new Promise((resolve, reject) => {
 		db.query(sqlquery, (error, results) => {
@@ -231,7 +265,7 @@ router.get("/menus", async function (req, res, next) {
 
 //get menu
 router.get("/menus/get", async function (req, res, next) {
-	const menuId = req.query.menu_id;
+	const menuId = req.sanitize(req.query.menu_id);
 	let results;
 	let menuInfo;
 
@@ -260,7 +294,7 @@ router.get("/menus/get", async function (req, res, next) {
 			});
 		});
 	} catch (error) {
-		res.render("error.ejs", {message: error})
+		res.json({error: error.message})
 		return;
 	}
 
@@ -274,7 +308,7 @@ router.get("/menus/search", async function (req, res, next) {
 	let sqlquery = `CALL search_for_menu(?)`;
 
 	results = await new Promise((resolve, reject) => {
-		db.query(sqlquery, req.query.keyword, (error, results) => {
+		db.query(sqlquery, req.sanitize(req.query.keyword), (error, results) => {
 			if (error) {
 				reject(error);
                 res.json({error: error});
@@ -353,7 +387,7 @@ router.get("/drinks", async function (req, res, next) {
 
 //get drinks
 router.get("/drinks/get", async function (req, res, next) {
-	const drinkId = req.query.drink_id;
+	const drinkId = req.sanitize(req.query.drink_id);
 	let results;
 	let drinkInfo;
 
@@ -382,7 +416,7 @@ router.get("/drinks/get", async function (req, res, next) {
 			});
 		});
 	} catch (error) {
-		res.render("error.ejs", {message: error})
+		res.json({error: error.message})
 		return;
 	}
 
@@ -396,7 +430,7 @@ router.get("/drinks/search", async function (req, res, next) {
 	let sqlquery = `CALL search_for_drink(?)`;
 
 	results = await new Promise((resolve, reject) => {
-		db.query(sqlquery, req.query.keyword, (error, results) => {
+		db.query(sqlquery, req.sanitize(req.query.keyword), (error, results) => {
 			if (error) {
 				reject(error);
                 res.json({error: error});
@@ -497,7 +531,7 @@ router.get("/ingredients", async function (req, res, next) {
 
 //get ingredients
 router.get("/ingredients/get", async function (req, res, next) {
-	const ingrId = req.query.ingr_id;
+	const ingrId = req.sanitize(req.query.ingr_id);
 	let ingrInfo;
 
 	try {
@@ -512,7 +546,7 @@ router.get("/ingredients/get", async function (req, res, next) {
 			});
 		});
 	} catch (error) {
-		res.render("error.ejs", {message: error})
+		res.json({error: error.message})
 		return;
 	}
 

@@ -1,38 +1,65 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>Welcome to <%=appData.appName%></title>
-    <link rel="stylesheet"  type="text/css" href="/main.css" />
-  </head>
-  <body>
-    <!--top nav header with login bar based on session data-->
-    <header>
-      <nav class="topnav">
-        <ul>
-          <li><a class="active" href="./"><%=appData.appName%></a></li>
-          <li><a href="list">Lists</a></li> <!--todo-->
-          <li><a href="search">Search</a></li> <!--todo-->
-          <li><a href="menus/editlist">Edit Menus</a></li> <!--todo-->
-          <li><a href="menus/create">Create Menu</a></li>
-          <li><a href="about">About</a></li>
-        <!--if no user, show login-->
-        <% if(user == null){ %>
-            <li class="right"><a href="users/login">Log in</a></li>
-        <!--if user exists, show logout-->
-        <% } else { %>
-            <li class="right"><a href="logout">Logout</a></li>
-            <% } %>
-        </ul>
-      </nav>
-    </header>
-    <main>
-      <% if(user != null) { %>
-        <h2>Welcome back <%=user%>!</h2>
-      <% } %>
-      <p><a href="about">About <%=appData.appName%></a></p>
-      <p><a href="users/register">Register with us</a></p>
-      <p><a href="users/login">Login with us</a></p>
-      <p><a href="logout">Logout here</a></p>
-    </main>
-  </body>
+	<head>
+		<title>Welcome to <%=appData.appName%></title>
+		<link rel="stylesheet" type="text/css" href="/main.css" />
+	</head>
+	<body>
+		<!--top nav header with login bar based on session data-->
+		<header>
+			<nav class="topnav">
+				<ul>
+					<li>
+						<a class="active" href="./"><%=appData.appName%></a>
+					</li>
+					<li><a href="list">Lists</a></li>
+					<!--todo-->
+					<li><a href="search">Search</a></li>
+					<!--todo-->
+					<li><a href="menus/editlist">Edit Menus</a></li>
+					<!--todo-->
+					<li><a href="menus/create">Create Menu</a></li>
+					<li><a href="about">About</a></li>
+					<!--if no user, show login-->
+					<% if(user == null){ %>
+					<li class="right"><a href="users/login">Log in</a></li>
+					<!--if user exists, show logout-->
+					<% } else { %>
+					<li class="right"><a href="logout">Logout</a></li>
+					<% } %>
+				</ul>
+			</nav>
+		</header>
+		<main>
+			<div class="flex-container centred">
+				<% if(user != null) { %>
+				<h2 class="subheading full-width">Welcome back <%=user%>!</h2>
+				<% } else { %>
+				<h2 class="subheading full-width">
+					You are not logged in! <br />
+					<a href="users/login">Log in</a> or
+					<a href="users/register">Register with us</a> to start
+					creating your menus today!
+				</h2>
+				<% } %>
+				<p>
+					Below is a directory of a few things you can do here on
+					Cocktail Canvas, enjoy!
+				</p>
+				<p  class="basic-button full-width"  ><a href="about">About <%=appData.appName%></a></p>
+				<p  class="basic-button full-width"  ><a href="list">List </a></p>
+				<p  class="basic-button full-width"  ><a href="search">Search </a></p>
+				<p  class="basic-button full-width"  >
+					<a href="menus/editlist">Edit Menu</a>
+				</p>
+				<p  class="basic-button full-width"  >
+					<a href="menus/create">Create Menu</a>
+				</p>
+				<p  class="basic-button full-width"  ><a href="users/register">Register with us</a></p>
+				<p  class="basic-button full-width"  ><a href="users/login">Login with us</a></p>
+				<p  class="basic-button full-width"  ><a href="logout">Logout here</a></p>
+				<p class="basic-button full-width" ><a href="api">Explore our RESTFUL API</a></p>
+			</div>
+		</main>
+	</body>
 </html>
