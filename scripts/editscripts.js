@@ -368,9 +368,6 @@ function getPrice(event) {
 }
 
 async function duplicateDrinkCheck(data) {
-	console.log("debug: data for checking:");
-	console.log(data);
-
 	//fetch drink search from drink_name
 	//url for api call
 	const url = `../api/drinks/search?keyword=${encodeURIComponent(
@@ -388,9 +385,6 @@ async function duplicateDrinkCheck(data) {
 
 			//parse results into object list
 			const parsedData = parseInternalDBResponse(DBdata);
-
-			console.log("debug: parsed data list from db");
-			console.log(parsedData);
 
 			let drinkId = -1;
 			const paramList = [
@@ -411,20 +405,12 @@ async function duplicateDrinkCheck(data) {
 							JSON.stringify(entry[param]) !=
 							JSON.stringify(data[param])
 						) {
-							console.log(
-								`${JSON.stringify(
-									entry[param]
-								)} doesn't match ${JSON.stringify(data[param])}`
-							);
 							allMatch = false;
 							break;
 						}
 					} else {
 						//otherwise normal check
 						if (entry[param] != data[param]) {
-							console.log(
-								`${entry[param]} doesn't match ${data[param]}`
-							);
 							allMatch = false;
 							break;
 						}
@@ -432,13 +418,7 @@ async function duplicateDrinkCheck(data) {
 				}
 
 				if (allMatch) {
-					console.log(
-						`debug: match found with ${entry.drink_name} and ${data.drink_name}`
-					);
 					drinkId = entry.drink_id;
-					console.log(
-						`returning matched drink id with value of ${drinkId}`
-					);
 					return drinkId;
 				}
 			}
@@ -476,20 +456,15 @@ async function addCocktailToDBFromSearch(event, price) {
 
 	//THEN LOOP THROUGH THE UL for the INGREDIENTS AND MEASURES INTO ARRAY
 	children[4].childNodes.forEach((listItem) => {
-		console.log(listItem);
 		if (listItem.childNodes[0] && listItem.childNodes[2]) {
 			data.ingredients.push(listItem.childNodes[0].innerText);
 			data.measurements.push(listItem.childNodes[2].innerText);
 		}
 	});
 
-	console.log(data);
-
 	//fucntion to check for duplicates, return drink_id if found
 	let drinkId = await duplicateDrinkCheck(data);
-	console.log(`debug: returned drink id = ${drinkId}`);
 	if (drinkId != -1) {
-		console.log("duplicate found");
 		data.drink_id = drinkId;
 	}
 
@@ -535,8 +510,6 @@ async function removeDrinkFromMenu(event) {
 		.querySelector(".cocktail-item-name")
 		.getAttribute("drinkId");
 	const menuId = document.getElementById("menu_id_holder").value;
-	console.log(drinkId);
-	console.log(menuId);
 
 	const data = {
 		drink_id: drinkId,
@@ -611,15 +584,12 @@ document.addEventListener("DOMContentLoaded", function () {
 					body: JSON.stringify(data),
 				});
 
-				console.log(response);
-
 				if (response.ok) {
 					const menu_id = form.querySelector(
 						'input[name="menu_id"]'
 					).value;
 					window.location.href = `/menus/editmenu?menu_id=${menu_id}`;
 				} else if (response.status == 400) {
-					console.log("hit a 400");
 					const result = await response.json();
 					if (result.errors && Array.isArray(result.errors)) {
 						//if we have errors and they are an array

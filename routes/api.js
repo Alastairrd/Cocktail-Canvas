@@ -9,7 +9,6 @@ const apiVersion = 0.1
 router.get("/", async function (req, res, next) {
 	
 	//list of routes
-	//todo update and correct
 	let apiData = {
 		version: "0.1",
 		links: {
@@ -43,7 +42,6 @@ router.get("/users", async function (req, res, next) {
 	});
 
 	//list of routes
-	//todo update and correct
 	let apiData = {
 		version: apiVersion,
 		total_users: usersCount[0][0].user_count ? usersCount[0][0].user_count : 'Error in user count',
@@ -246,7 +244,6 @@ router.get("/menus", async function (req, res, next) {
 	});
 
 	//list of routes
-	//todo update and correct
 	let apiData = {
 		version: apiVersion,
 		menu_count: menusCount[0][0].menu_count ? menusCount[0][0].menu_count : 'Error in menu count',
@@ -280,8 +277,6 @@ router.get("/menus/get", async function (req, res, next) {
 				}
 			});
 		});
-
-		console.log(menuInfo);
 
 		menuSqlQuery = `CALL get_current_drink_list(?)`;
 		results = await new Promise((resolve, reject) => {
@@ -366,7 +361,6 @@ router.get("/drinks", async function (req, res, next) {
 	});
 
 	//list of routes
-	//todo update and correct
 	let apiData = {
 		version: apiVersion,
 		drink_count: drinksCount[0][0].drink_count ? drinksCount[0][0].drink_count : 'Error in drink count',
@@ -402,8 +396,6 @@ router.get("/drinks/get", async function (req, res, next) {
 				}
 			});
 		});
-
-		console.log(drinkInfo);
 
 		drinkSqlQuery = `CALL get_current_drink_list(?)`;
 		results = await new Promise((resolve, reject) => {
@@ -510,7 +502,6 @@ router.get("/ingredients", async function (req, res, next) {
 	});
 
 	//list of routes
-	//todo update and correct
 	let apiData = {
 		version: apiVersion,
 		ingredient_count: ingrsCount[0][0].ingr_count,

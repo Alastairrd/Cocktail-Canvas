@@ -20,8 +20,6 @@ router.get("/view", async function (req, res, next) {
 			});
 		});
 
-		console.log(menuInfo);
-
 		menuSqlQuery = `CALL get_current_drink_list(?)`;
 		results = await new Promise((resolve, reject) => {
 			db.query(menuSqlQuery, menuId, (error, results) => {
@@ -96,7 +94,6 @@ router.post(
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			console.log(errors);
-			console.log(req.body.menu_name.length);
 			res.render("createmenu.ejs", {
 				errors: errors.array(),
 				user: req.session.user,
@@ -204,9 +201,6 @@ router.get("/editlist", redirectLogin, async function (req, res, next) {
 	const userId = req.session.user_id;
 	const sqlquery = `CALL get_menu_list_for_user(?)`;
 
-	console.log(userId);
-
-
 	//query db for current menu list
 	results = await new Promise((resolve, reject) => {
 		db.query(sqlquery, userId, (error, results) => {
@@ -215,7 +209,6 @@ router.get("/editlist", redirectLogin, async function (req, res, next) {
 				console.log(error.message);
 			} else {
 				resolve(results);
-				console.log(results);
 			}
 		});
 	});
@@ -341,7 +334,6 @@ router.post(
 						}
 					});
 				});
-				console.log(results);
 
 				res.status(200).send("OK");
 				return;
@@ -351,8 +343,6 @@ router.post(
 			res.status(400).json({ errors: [{msg: error.message, path: "internal"}] });
 			return;
 		}
-
-		console.log(req.body);
 
 		//else add new cocktail to db
 		//setup variables
@@ -376,7 +366,6 @@ router.post(
 			jsonIngrMeas,
 			menuId,
 		];
-		console.log(params);
 		results = await new Promise((resolve, reject) => {
 			db.query(sqlquery, params, (error, results) => {
 				if (error) {
@@ -388,8 +377,6 @@ router.post(
 				}
 			});
 		});
-		console.log(results);
-		console.log(results.warningStatus);
 
 		res.status(200).send("OK");
 	}
@@ -400,12 +387,10 @@ router.post(
 	redirectLogin,
 	async function (req, res, next) {
 		try {
-			console.log(req.body);
 			const menuId = req.body.menu_id;
 
 			let sqlQuery = `CALL check_menu_against_user(?,?)`;
 			let params = [menuId, req.session.user_id];
-			console.log(params);
 			checkResults = await new Promise((resolve, reject) => {
 				db.query(sqlQuery, params, (error, results) => {
 					if (error) {
@@ -418,11 +403,9 @@ router.post(
 
 			//if not owner of menu
 			if (!checkResults[0][0].is_owner) {
-				console.log("not owner");
 				res.status(403).send("User is not owner of menu.");
 				return;
 			}
-			console.log("is owner");
 
 			sqlQuery = `CALL remove_drink_from_menu(?, ?)`;
 			params = [req.body.drink_id, req.body.menu_id];

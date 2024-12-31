@@ -76,7 +76,7 @@ router.get("/list", async function (req, res, next) {
 		listData.users = users[0]
 
 		//return all menus
-		sqlquery = "CALL get_all_menus()"; //todo
+		sqlquery = "CALL get_all_menus()";
 		const menus = await new Promise((resolve, reject) => {
 			db.query(sqlquery, (error, results) => {
 				if (error) {
@@ -90,7 +90,7 @@ router.get("/list", async function (req, res, next) {
 		listData.menus = menus[0]
 
 		//return all drinks
-		sqlquery = "CALL get_all_drinks()"; //todo
+		sqlquery = "CALL get_all_drinks()";
 		let resDrinkList = [];
 		const drinks = await new Promise((resolve, reject) => {
 			db.query(sqlquery, (error, results) => {
@@ -210,7 +210,6 @@ router.post("/searchresult", async function (req, res, next) {
 
 					responseData = Object.assign({}, resultData, sessionData);
 
-					console.log(responseData);
 					res.render("searchresult.ejs", responseData);
 				}
 			});

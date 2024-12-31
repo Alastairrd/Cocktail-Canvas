@@ -10,16 +10,12 @@
       "menus-button",
       "drinks-button",
     ];
-    console.log(activeButton);
 
     //sets the selected div to display and all others to no display
     for (i = 0; i < buttonArray.length; i++) {
       if(buttonArray[i] == activeButton) {
-        console.log("true");
         button = document.getElementById(activeButton)
-        console.log(button);
         button.classList.add("activeNow")
-        console.log(button);
       } else {
         document.getElementById(buttonArray[i]).classList.remove("activeNow")
       }
