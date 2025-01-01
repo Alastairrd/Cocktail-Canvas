@@ -1,67 +1,91 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>Create Menu: <%=appData.appName%></title>
-    <link rel="stylesheet"  type="text/css" href="/main.css" />
-  </head>
-  <body>
-    <!--top navigation bar, with reactive login/logout-->
-    <nav class="topnav">
-      <ul>
-        <li><a href="../"><%=appData.appName%></a></li>
-        <li><a href="../list">Lists</a></li> 
-        <li><a href="../search">Search</a></li> 
-        <li><a class="active" href="../menus/editlist">Edit Menus</a></li> 
-        <li><a href="../menus/create">Create Menu</a></li>
-        <li><a href="../about">About</a></li>
-      <!--if no user, show login-->
-      <% if(user == null){ %>
-          <li class="right"><a href="../users/login">Log in</a></li>
-      <!--if user exists, show logout-->
-      <% } else { %>
-          <li class="right"><a href="../logout">Logout</a></li>
-          <% } %>
-      </ul>
-    </nav>
-    <main>
-      <!--headings-->
-      <div class="flex-container centred">
-        <div class="full-width"> 
-          <h1 class="heading">List of your current menus: <%=appData.appName%></h1>
-          <h2 class="subheading">Pick one of your menus to edit!</h2>
-        </div>
-        <!--list of menus belonging to user-->
-        <div id="menu-list-div" class="list-div">
-          <ul>
-            <%if(menuList.length < 1) { %>
-              <p>No menus found.</p>
-              <form action="../menus/create" method="GET">
-                <button type="submit" class="basic-button">
-                  Create Menu
-                </button>
-              </form>
-            <% } %>
-            <!--menu item with link and edit button-->
-            <% menuList.forEach(function(menu) { %>
-              <li class="edit-menu-item">
-                <a
-                    class="menu-link"
-                    href="/menus/view?menuId=<%= menu.menu_id %>"
-                  >
-                  <div class="menu-div edit-menu-div">
-                    <form class="edit-menu-div" action="/menus/editmenu" method="GET">
-                        <label class="menu-name full-width" for="name"><%= menu.menu_name %></label>
-                        <label for="desc">Menu Description: <%= menu.menu_desc %></label>
-                      <input type="hidden" name="menu_id" value="<%= menu.menu_id %>">
-                      <button class="basic-button edit-button" type="submit">Edit Menu</button>
-                    </form>
-                  </div>
-                </a>
-              </li>
-            <% }) %>
-          </ul>
-        </div>
-      </div>
-    </main>
-  </body>
+	<head>
+		<title>Create Menu: <%=appData.appName%></title>
+		<link rel="stylesheet" type="text/css" href="/main.css" />
+	</head>
+	<body>
+		<!--top navigation bar, with reactive login/logout-->
+		<nav class="topnav">
+			<ul>
+				<li><a href="../"><%=appData.appName%></a></li>
+				<li><a href="../list">Lists</a></li>
+				<li><a href="../search">Search</a></li>
+				<li>
+					<a class="active" href="../menus/editlist">Edit Menus</a>
+				</li>
+				<li><a href="../menus/create">Create Menu</a></li>
+				<li><a href="../about">About</a></li>
+				<!--if no user, show login-->
+				<% if(user == null){ %>
+				<li class="right"><a href="../users/login">Log in</a></li>
+				<!--if user exists, show logout-->
+				<% } else { %>
+				<li class="right"><a href="../logout">Logout</a></li>
+				<% } %>
+			</ul>
+		</nav>
+		<main>
+			<!--headings-->
+			<div class="flex-container centred">
+				<div class="full-width">
+					<h1 class="heading">
+						List of your current menus: <%=appData.appName%>
+					</h1>
+					<h2 class="subheading">Pick one of your menus to edit!</h2>
+				</div>
+				<!--list of menus belonging to user-->
+				<div id="menu-list-div" class="list-div">
+					<ul>
+						<%if(menuList.length < 1) { %>
+						<p>No menus found.</p>
+						<form action="../menus/create" method="GET">
+							<button type="submit" class="basic-button">
+								Create Menu
+							</button>
+						</form>
+						<% } %>
+						<!--menu item with link and edit button-->
+						<% menuList.forEach(function(menu) { %>
+						<li class="edit-menu-item">
+							<div class="menu-div edit-menu-div">
+								<form
+									class="edit-menu-div"
+									action="/menus/editmenu"
+									method="GET"
+								>
+									<a
+										class="menu-link"
+										href="/menus/view?menuId=<%= menu.menu_id %>"
+									>
+										<label
+											class="menu-name full-width"
+											for="name"
+											><%= menu.menu_name %></label
+										>
+										<label for="desc"
+											>Menu Description: <%=
+											menu.menu_desc %></label
+										>
+									</a>
+									<input
+										type="hidden"
+										name="menu_id"
+										value="<%= menu.menu_id %>"
+									/>
+									<button
+										class="basic-button edit-button"
+										type="submit"
+									>
+										Edit Menu
+									</button>
+								</form>
+							</div>
+						</li>
+						<% }) %>
+					</ul>
+				</div>
+			</div>
+		</main>
+	</body>
 </html>
