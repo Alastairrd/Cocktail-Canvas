@@ -1,6 +1,4 @@
-# Create database script for Bettys books
-
-# Create the database
+# Create the database for cocktail canvas
 CREATE DATABASE IF NOT EXISTS cocktail_canvas;
 USE cocktail_canvas;
 
