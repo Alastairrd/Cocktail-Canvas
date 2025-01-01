@@ -457,12 +457,12 @@ async function duplicateDrinkCheck(data) {
 					//if array compare with json stringify
 					if (param == "ingredients" || param == "measurements") {
 						if (
-							JSON.stringify(entry[param].toLowerCase()) !=
-							JSON.stringify(data[param].toLowerCase())
+							JSON.stringify(entry[param]).toLowerCase() !=
+							JSON.stringify(data[param]).toLowerCase()
 						) {
 							allMatch = false;
 							console.log("false");
-							console.log(JSON.stringify(entry[param].toLowerCase()), JSON.stringify(data[param].toLowerCase())); //todo
+							console.log(JSON.stringify(entry[param]).toLowerCase(), JSON.stringify(data[param]).toLowerCase()); //todo
 							break; 
 						}
 					} else {
