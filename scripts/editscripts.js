@@ -550,7 +550,7 @@ async function addCocktailToDBFromSearch(event, price) {
 			const p = document.createElement("p");
 			p.classList.add("full-width");
 			const errorMessage = await response.text();
-			p.textContent = `Error: (${errorMessage})`;
+			p.textContent = `Error: (${errorMessage.innerText})`;
 			errorContainer.appendChild(p);
 		}
 

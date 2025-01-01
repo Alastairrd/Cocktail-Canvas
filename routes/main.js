@@ -278,7 +278,7 @@ router.get("/logout", redirectLogin, (req, res) => {
 		if (err) {
 			return res.redirect("./");
 		}
-		res.redirect("/");
+		res.redirect("./");
 	});
 });
 
