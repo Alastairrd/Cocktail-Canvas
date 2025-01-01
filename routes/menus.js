@@ -397,6 +397,9 @@ router.post(
 		});
 		const menuId = req.body.menu_id;
 
+		//todo
+		console.log(cocktailGlass);
+
 		//variables for adding cocktail query
 		const sqlquery = `CALL add_drink_to_db(?,?,?,?,?,?)`;
 		const params = [
