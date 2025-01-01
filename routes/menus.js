@@ -91,9 +91,9 @@ router.post(
 	"/create",
 	redirectLogin,
 	[
-		check("menu_name").notEmpty().trim().escape().isLength({ max: 50 }),
+		check("menu_name").notEmpty().trim().isLength({ max: 50 }),
 
-		check("menu_desc").trim().escape().isLength({ max: 256 }),
+		check("menu_desc").trim().isLength({ max: 256 }),
 	],
 	async function (req, res, next) {
 		//validation errors
@@ -239,7 +239,6 @@ router.post(
 			.notEmpty()
 			.withMessage("Drink name must not be empty.")
 			.trim()
-			.escape()
 			.isLength({ max: 64 })
 			.withMessage("Drink name cannot be more than 64 characters."),
 
@@ -248,7 +247,6 @@ router.post(
 			.notEmpty()
 			.withMessage("Method must not be empty.")
 			.trim()
-			.escape()
 			.isLength({ max: 512 })
 			.withMessage("Method cannot be more than 512 characters."),
 
@@ -257,7 +255,6 @@ router.post(
 			.notEmpty()
 			.withMessage("Glass must not be empty.")
 			.trim()
-			.escape()
 			.isLength({ max: 32 })
 			.withMessage("Glass name cannot be more than 32 characters."),
 
@@ -272,8 +269,7 @@ router.post(
 			.notEmpty()
 			.withMessage("Ingredient cannot be empty.")
 			.isLength({ max: 50 })
-			.withMessage("Ingredient cannot be more than 50 characters.")
-			.escape(),
+			.withMessage("Ingredient cannot be more than 50 characters."),
 
 		//check measurements array
 		check("measurements")
@@ -286,8 +282,7 @@ router.post(
 			.notEmpty()
 			.withMessage("Measurement cannot be empty.")
 			.isLength({ max: 50 })
-			.withMessage("Measurement canot be more than 50 characters.")
-			.escape(),
+			.withMessage("Measurement canot be more than 50 characters."),
 
 		//check ingredients and measurements have same length
 		check().custom((value, { req }) => {

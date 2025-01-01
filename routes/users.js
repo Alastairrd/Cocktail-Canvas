@@ -104,13 +104,12 @@ router.post(
 		check("username")
 			.notEmpty()
 			.trim()
-			.escape()
 			.isLength({ min: 8, max: 16 }),
 
-		check("company").trim().escape().isLength({ max: 64 }),
+		check("company").trim().isLength({ max: 64 }),
 
-		check("first").trim().escape(),
-		check("last").trim().escape(),
+		check("first").trim(),
+		check("last").trim(),
 	],
 	async function (req, res, next) {
 		//input validation errors

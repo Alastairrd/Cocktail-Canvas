@@ -569,7 +569,7 @@ async function removeDrinkFromMenu(event) {
 
 	try {
 		//reponse is equal to the result of the promise
-		const response = await fetch("/menus/remove-cocktail-from-menu", {
+		const response = await fetch("./remove-cocktail-from-menu", {
 			method: "POST",
 
 			headers: {
