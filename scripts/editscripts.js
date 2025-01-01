@@ -462,15 +462,15 @@ async function duplicateDrinkCheck(data) {
 						) {
 							allMatch = false;
 							console.log("false");
-							console.log(JSON.stringify(entry[param]), JSON.stringify(data[param]));
-							break;
+							console.log(JSON.stringify(entry[param]), JSON.stringify(data[param])); //todo
+							break; 
 						}
 					} else {
 						//otherwise normal check
 						if (entry[param] != data[param]) {
 							allMatch = false;
 							console.log("false");
-							console.log(entry[param], data[param]);
+							console.log(entry[param], data[param]); //todo
 							break;
 						}
 					}
@@ -500,6 +500,8 @@ async function addCocktailToDBFromSearch(event, price) {
 
 	const menu_id = document.getElementById("menu_id_holder").value;
 
+	console.log("data pre clean: ", children[2].innerText); //todo
+
 	const data = {
 		drink_id: -1,
 		drink_name: children[0].innerText,
@@ -510,6 +512,8 @@ async function addCocktailToDBFromSearch(event, price) {
 		measurements: [],
 		menu_id: menu_id,
 	};
+
+	console.log("data post cleamn: ", data.drink_glass); //todo
 
 	//THEN LOOP THROUGH THE UL for the INGREDIENTS AND MEASURES INTO ARRAY
 	children[4].childNodes.forEach((listItem) => {
