@@ -446,6 +446,8 @@ async function duplicateDrinkCheck(data) {
 				"ingredients",
 				"measurements",
 			];
+			console.log(parsedData);
+			console.log(data);
 			for (const entry of parsedData) {
 				let allMatch = true; //will change to false if something doesn't match at any point
 
@@ -459,12 +461,16 @@ async function duplicateDrinkCheck(data) {
 							JSON.stringify(data[param])
 						) {
 							allMatch = false;
+							console.log("false");
+							console.log(JSON.stringify(entry[param]), JSON.stringify(data[param]));
 							break;
 						}
 					} else {
 						//otherwise normal check
 						if (entry[param] != data[param]) {
 							allMatch = false;
+							console.log("false");
+							console.log(entry[param], data[param]);
 							break;
 						}
 					}
