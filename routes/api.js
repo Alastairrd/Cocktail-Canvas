@@ -192,7 +192,7 @@ router.get("/users/search", [check("keyword").trim().escape()] ,async function (
 	let sqlquery = `CALL search_for_user(?)`;
 	let keyword;
 	if(!req.query.keyword || req.query.keyword.length < 1){
-		keyword = " "
+		keyword = ""
 	} else {
 		keyword = req.query.keyword;
 	}
