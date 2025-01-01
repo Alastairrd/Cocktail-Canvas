@@ -351,9 +351,7 @@ router.post(
 						}
 					});
 				});
-				console.log("logging curent drink list");
-				console.log(results);
-				console.log("end current list");
+
 				const exists = results[0].some(row => row.drink_id == req.body.drink_id);
 
 				if(exists){
