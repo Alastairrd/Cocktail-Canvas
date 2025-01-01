@@ -678,7 +678,7 @@ router.get("/ingredients/listbycount", async function (req, res, next) {
 //glass base listing all links
 router.get("/glasses", async function (req, res, next) {
 	//return count of all glasses
-	const ingrsCount = await new Promise((resolve, reject) => {
+	const glassesCount = await new Promise((resolve, reject) => {
 		db.query(`CALL get_glass_count()`, (error, results) => {
 			if (error) {
 				reject(error);

@@ -668,6 +668,18 @@ END$$
 DELIMITER ;
 
 -- -----------------------------------------------------
+-- procedure get_glass_count
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `cocktail_canvas`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_glass_count`()
+BEGIN
+	SELECT COUNT(glass_name) as glass_count from glass;
+END$$
+DELIMITER ;
+
+-- -----------------------------------------------------
 -- View `cocktail_canvas`.`wholecocktails`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `cocktail_canvas`.`wholecocktails`;
