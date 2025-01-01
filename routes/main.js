@@ -276,9 +276,9 @@ router.get("/about", async function (req, res, next) {
 router.get("/logout", redirectLogin, (req, res) => {
 	req.session.destroy((err) => {
 		if (err) {
-			return res.redirect("./");
+			return res.redirect("login");
 		}
-		res.redirect("./");
+		res.redirect("login");
 	});
 });
 
