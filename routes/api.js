@@ -162,7 +162,7 @@ router.post(
 );
 
 //user get
-router.get("/users/get", async function (req, res, next) {
+router.get("/users/get", [check("user_id").trim().escape()], async function (req, res, next) {
 	const userId = req.query.user_id;
 	let userInfo;
 
@@ -279,8 +279,8 @@ router.get("/menus", async function (req, res, next) {
 });
 
 //get menu
-router.get("/menus/get", async function (req, res, next) {
-	const menuId = req.sanitize(req.query.menu_id);
+router.get("/menus/get", [check("menu_id").trim().escape()], async function (req, res, next) {
+	const menuId = req.query.menu_id;
 	let results;
 	let menuInfo;
 
@@ -415,7 +415,7 @@ router.get("/drinks", async function (req, res, next) {
 });
 
 //get drinks
-router.get("/drinks/get", async function (req, res, next) {
+router.get("/drinks/get", [check("drink_id").trim().escape()], async function (req, res, next) {
 	const drinkId = req.sanitize(req.query.drink_id);
 	let results;
 	let drinkInfo;
@@ -571,7 +571,7 @@ router.get("/ingredients", async function (req, res, next) {
 });
 
 //get ingredients
-router.get("/ingredients/get", async function (req, res, next) {
+router.get("/ingredients/get", [check("ingr_id").trim().escape()], async function (req, res, next) {
 	const ingrId = req.sanitize(req.query.ingr_id);
 	let ingrInfo;
 
@@ -711,7 +711,7 @@ router.get("/glasses", async function (req, res, next) {
 });
 
 //get glass
-router.get("/glasses/get", async function (req, res, next) {
+router.get("/glasses/get", [check("glass_id").trim().escape()], async function (req, res, next) {
 	const glassId = req.sanitize(req.query.glass_id);
 	let glassInfo;
 
