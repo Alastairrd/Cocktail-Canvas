@@ -520,7 +520,7 @@ async function addCocktailToDBFromSearch(event, price) {
 
 	try {
 		//reponse is equal to the result of the promise
-		const response = await fetch("/menus/add-cocktail-to-menu", {
+		const response = await fetch("./add-cocktail-to-menu", {
 			method: "POST",
 
 			headers: {
