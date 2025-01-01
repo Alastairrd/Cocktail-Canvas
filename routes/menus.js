@@ -337,8 +337,31 @@ router.post(
 		try {
 			//if cocktail exists in db already
 			if (req.body.drink_id != -1) {
-				const sqlquery = `CALL add_existing_drink_to_menu(?, ?)`;
-				const params = [req.body.drink_id, req.body.menu_id];
+				//check if drink is already in menu
+				let sqlquery = `CALL get_current_drink_list(?)`;
+				let params = [req.body.menu_id];
+
+				results = await new Promise((resolve, reject) => {
+					db.query(sqlquery, params, (error, results) => {
+						if (error) {
+							console.log(error);
+							reject(error);
+						} else {
+							resolve(results);
+						}
+					});
+				});
+				console.log(results);
+				const exists = results[0].some(row => row.drink_id == req.body.drink_id);
+
+				if(exists){
+					res.status(400).send("Drink already exists in menu.");
+					return;
+				}
+
+				//otherwise add to menu
+				sqlquery = `CALL add_existing_drink_to_menu(?, ?)`;
+				params = [req.body.drink_id, req.body.menu_id];
 
 				results = await new Promise((resolve, reject) => {
 					db.query(sqlquery, params, (error, results) => {

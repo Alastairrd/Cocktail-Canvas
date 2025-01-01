@@ -5,8 +5,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	);
 
 	//setting up suggestions from databases for glass input
-	const glassInput = document.getElementById("add_cocktail_glass")
-	const glassSuggestions = document.getElementById("glassSuggestions")
+	const glassInput = document.getElementById("add_cocktail_glass");
+	const glassSuggestions = document.getElementById("glassSuggestions");
 	glassInput.setAttribute("list", "glassSuggestions");
 
 	//listener for glass input
@@ -470,7 +470,8 @@ async function duplicateDrinkCheck(data) {
 					}
 				}
 
-				if (allMatch) { //return the id of the existing drink matching the one trying to be added
+				if (allMatch) {
+					//return the id of the existing drink matching the one trying to be added
 					drinkId = entry.drink_id;
 					return drinkId;
 				}
@@ -544,6 +545,12 @@ async function addCocktailToDBFromSearch(event, price) {
 					", text: " +
 					response.statusText
 			);
+			document.getElementById("error-container");
+			errorContainer.innerHTML = "";
+			const p = document.createElement("p");
+			p.classList.add("full-width");
+			p.textContent = `Error: (${response.statusText})`;
+			errorContainer.appendChild(p);
 		}
 
 		//else oh no, tell us what went wrong
