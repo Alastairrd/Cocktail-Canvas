@@ -513,9 +513,9 @@ router.get("/ingredients", async function (req, res, next) {
 		version: apiVersion,
 		ingredient_count: ingrsCount[0][0].ingr_count,
 		links: {
-			get: "https://doc.gold.ac.uk/usr/717/api/ingredients/get?ingr_id=",
+			get: "https://doc.gold.ac.uk/usr/717/api/ingredients/get?ingr_id= ",
 			get_info: "GET REQUEST // Required parameters: `ingr_id` (INT)",
-			search: "https://doc.gold.ac.uk/usr/717/api/ingredients/search?keyword=",
+			search: "https://doc.gold.ac.uk/usr/717/api/ingredients/search?keyword= ",
 			search_info: "GET REQUEST // Required parameters: `keyword` (max length 64)",
 			list: "https://doc.gold.ac.uk/usr/717/api/ingredients/list",
 			list_info: "GET REQUEST // Required parameters: N/A",
