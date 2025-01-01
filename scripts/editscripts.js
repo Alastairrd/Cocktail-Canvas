@@ -545,7 +545,7 @@ async function addCocktailToDBFromSearch(event, price) {
 					", text: " +
 					response.statusText
 			);
-			document.getElementById("error-container");
+			let errorContainer = document.getElementById("error-container");
 			errorContainer.innerHTML = "";
 			const p = document.createElement("p");
 			p.classList.add("full-width");
