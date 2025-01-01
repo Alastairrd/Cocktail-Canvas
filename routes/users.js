@@ -77,7 +77,7 @@ router.post("/login", async function (req, res, next) {
 					// load does not happen before session is saved
 					req.session.save(function (err) {
 						if (err) return next(err);
-						res.redirect("/");
+						res.redirect("../");
 					});
 				});
 			} else {
