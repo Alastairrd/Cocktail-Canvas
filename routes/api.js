@@ -317,15 +317,21 @@ router.get("/menus/get", async function (req, res, next) {
 });
 
 //menu search
-router.get("/menus/search", async function (req, res, next) {
-	try {
-		let sqlquery = `CALL search_for_menu(?)`;
+router.get(
+	"/menus/search",
+	[check("keyword").trim().escape()],
+	async function (req, res, next) {
+		let keyword;
+		if (!req.query.keyword || req.query.keyword.length < 1) {
+			keyword = "";
+		} else {
+			keyword = req.query.keyword;
+		}
+		try {
+			let sqlquery = `CALL search_for_menu(?)`;
 
-		results = await new Promise((resolve, reject) => {
-			db.query(
-				sqlquery,
-				req.sanitize(req.query.keyword),
-				(error, results) => {
+			results = await new Promise((resolve, reject) => {
+				db.query(sqlquery, keyword, (error, results) => {
 					if (error) {
 						reject(error);
 					} else {
@@ -337,14 +343,14 @@ router.get("/menus/search", async function (req, res, next) {
 
 						res.json(apiData);
 					}
-				}
-			);
-		});
-	} catch (error) {
-		res.json({ error: error.message });
-		return;
+				});
+			});
+		} catch (error) {
+			res.json({ error: error.message });
+			return;
+		}
 	}
-});
+);
 
 //list menus
 router.get("/menus/list", async function (req, res, next) {
@@ -447,15 +453,21 @@ router.get("/drinks/get", async function (req, res, next) {
 });
 
 //search drinks
-router.get("/drinks/search", async function (req, res, next) {
-	try {
-		let sqlquery = `CALL search_for_drink(?)`;
+router.get(
+	"/drinks/search",
+	[check("keyword").trim().escape()],
+	async function (req, res, next) {
+		let keyword;
+		if (!req.query.keyword || req.query.keyword.length < 1) {
+			keyword = "";
+		} else {
+			keyword = req.query.keyword;
+		}
+		try {
+			let sqlquery = `CALL search_for_drink(?)`;
 
-		results = await new Promise((resolve, reject) => {
-			db.query(
-				sqlquery,
-				req.sanitize(req.query.keyword),
-				(error, results) => {
+			results = await new Promise((resolve, reject) => {
+				db.query(sqlquery, keyword, (error, results) => {
 					if (error) {
 						reject(error);
 					} else {
@@ -467,14 +479,14 @@ router.get("/drinks/search", async function (req, res, next) {
 
 						res.json(apiData);
 					}
-				}
-			);
-		});
-	} catch (error) {
-		res.json({ error: error.message });
-		return;
+				});
+			});
+		} catch (error) {
+			res.json({ error: error.message });
+			return;
+		}
 	}
-});
+);
 
 //list all drinks
 router.get("/drinks/list", async function (req, res, next) {
@@ -585,12 +597,18 @@ router.get("/ingredients/get", async function (req, res, next) {
 });
 
 //search ingredients
-router.get("/ingredients/search", async function (req, res, next) {
+router.get("/ingredients/search", [check("keyword").trim().escape()],async function (req, res, next) {
+	let keyword;
+		if (!req.query.keyword || req.query.keyword.length < 1) {
+			keyword = "";
+		} else {
+			keyword = req.query.keyword;
+		}
 	try {
 		let sqlquery = `CALL search_for_ingr(?)`;
 
 		results = await new Promise((resolve, reject) => {
-			db.query(sqlquery, req.query.keyword, (error, results) => {
+			db.query(sqlquery, keyword, (error, results) => {
 				if (error) {
 					reject(error);
 				} else {
@@ -719,12 +737,18 @@ router.get("/glasses/get", async function (req, res, next) {
 });
 
 //search glasses
-router.get("/glasses/search", async function (req, res, next) {
+router.get("/glasses/search", [check("keyword").trim().escape()], async function (req, res, next) {
+	let keyword;
+		if (!req.query.keyword || req.query.keyword.length < 1) {
+			keyword = "";
+		} else {
+			keyword = req.query.keyword;
+		}
 	try {
 		let sqlquery = `CALL search_for_glass(?)`;
 
 		results = await new Promise((resolve, reject) => {
-			db.query(sqlquery, req.query.keyword, (error, results) => {
+			db.query(sqlquery, keyword, (error, results) => {
 				if (error) {
 					reject(error);
 				} else {
