@@ -204,7 +204,6 @@ router.get(
 			db.query(sqlquery, keyword, (error, results) => {
 				if (error) {
 					reject(error);
-					res.json({ error: error });
 				} else {
 					resolve(results);
 
@@ -329,7 +328,6 @@ router.get("/menus/search", async function (req, res, next) {
 				(error, results) => {
 					if (error) {
 						reject(error);
-						res.json({ error: error });
 					} else {
 						resolve(results);
 
@@ -460,7 +458,6 @@ router.get("/drinks/search", async function (req, res, next) {
 				(error, results) => {
 					if (error) {
 						reject(error);
-						res.json({ error: error });
 					} else {
 						resolve(results);
 
@@ -596,7 +593,6 @@ router.get("/ingredients/search", async function (req, res, next) {
 			db.query(sqlquery, req.query.keyword, (error, results) => {
 				if (error) {
 					reject(error);
-					res.json({ error: error });
 				} else {
 					resolve(results);
 
@@ -731,7 +727,6 @@ router.get("/glasses/search", async function (req, res, next) {
 			db.query(sqlquery, req.query.keyword, (error, results) => {
 				if (error) {
 					reject(error);
-					res.json({ error: error });
 				} else {
 					resolve(results);
 
