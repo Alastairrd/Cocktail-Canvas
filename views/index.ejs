@@ -6,18 +6,18 @@
 	</head>
 	<body>
 		<header>
-      <!--top navigation bar, with reactive login/logout-->
+			<!--top navigation bar, with reactive login/logout-->
 			<nav class="topnav">
 				<ul>
 					<li>
 						<a class="active" href="./"><%=appData.appName%></a>
 					</li>
 					<li><a href="list">Lists</a></li>
-					
+
 					<li><a href="search">Search</a></li>
-					
+
 					<li><a href="menus/editlist">Edit Menus</a></li>
-					
+
 					<li><a href="menus/create">Create Menu</a></li>
 					<li><a href="about">About</a></li>
 					<!--if no user, show login-->
@@ -31,7 +31,7 @@
 			</nav>
 		</header>
 		<main>
-      <!--headings-->
+			<!--headings-->
 			<div class="flex-container centred">
 				<% if(user != null) { %>
 				<h2 class="subheading full-width">Welcome back <%=user%>!</h2>
@@ -47,20 +47,28 @@
 					Below is a directory of a few things you can do here on
 					Cocktail Canvas, enjoy!
 				</p>
-        <!--list of links from index page-->
-				<p  class="basic-button full-width"  ><a href="about">About <%=appData.appName%></a></p>
-				<p  class="basic-button full-width"  ><a href="list">List </a></p>
-				<p  class="basic-button full-width"  ><a href="search">Search </a></p>
-				<p  class="basic-button full-width"  >
-					<a href="menus/editlist">Edit Menu</a>
-				</p>
-				<p  class="basic-button full-width"  >
-					<a href="menus/create">Create Menu</a>
-				</p>
-				<p  class="basic-button full-width"  ><a href="users/register">Register with us</a></p>
-				<p  class="basic-button full-width"  ><a href="users/login">Login with us</a></p>
-				<p  class="basic-button full-width"  ><a href="logout">Logout here</a></p>
-				<p class="basic-button full-width" ><a href="api">Explore our RESTFUL API</a></p>
+				<!--list of links from index page-->
+				<a class="basic-button full-width" href="about"
+					>About <%= appData.appName %></a
+				>
+				<a class="basic-button full-width" href="list">List</a>
+				<a class="basic-button full-width" href="search">Search</a>
+				<a class="basic-button full-width" href="menus/editlist"
+					>Edit Menu</a
+				>
+				<a class="basic-button full-width" href="menus/create"
+					>Create Menu</a
+				>
+				<a class="basic-button full-width" href="users/register"
+					>Register with us</a
+				>
+				<a class="basic-button full-width" href="users/login"
+					>Login with us</a
+				>
+				<a class="basic-button full-width" href="logout">Logout here</a>
+				<a class="basic-button full-width" href="api"
+					>Explore our RESTFUL API</a
+				>
 			</div>
 		</main>
 	</body>
