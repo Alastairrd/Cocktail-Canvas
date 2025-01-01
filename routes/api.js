@@ -49,9 +49,9 @@ router.get("/users", async function (req, res, next) {
 			register: "https://doc.gold.ac.uk/usr/717/api/users/register",
 			register_info: "POST REQUEST // Required parameters: `password` (length 8 - 24), `username` (length 8 - 16) // Optional parameters: " +
 			"`email`: (valid, max length 320), `company`: (max length 64), `first`: (max length 20), `last`: (max length 30)",
-			get: "https://doc.go.d.ac.uk/usr/717/api/users/get",
+			get: "https://doc.go.d.ac.uk/usr/717/api/users/get?user_id=",
 			get_info: "GET REQUEST // Required paramaters: `user_id` (INT)",
-			search: "https://doc.gold.ac.uk/usr/717/api/users/search",
+			search: "https://doc.gold.ac.uk/usr/717/api/users/search?keyword=",
 			search_info: "GET REQUEST // Required parameters: `keyword` (max length 50)",
 			list: "https://doc.gold.ac.uk/usr/717/api/users/list",
 			list_info: "GET REQUEST // Required parameters: N/A"
@@ -255,9 +255,9 @@ router.get("/menus", async function (req, res, next) {
 		version: apiVersion,
 		menu_count: menusCount[0][0].menu_count ? menusCount[0][0].menu_count : 'Error in menu count',
 		links: {
-			get: "https://doc.gold.ac.uk/usr/717/api/menus/get",
+			get: "https://doc.gold.ac.uk/usr/717/api/menus/get?menu_id=",
 			get_info: "GET REQUEST // Required parameters: `menu_id` (INT)",
-			search: "https://doc.gold.ac.uk/usr/717/api/menus/search",
+			search: "https://doc.gold.ac.uk/usr/717/api/menus/search?keyword=",
 			search_info: "GET REQUEST // Required parameters: `keyword` (max length 16)",
 			list: "https://doc.gold.ac.uk/usr/717/api/menus/list",
 			list_info: "GET REQUEST // Required parameters: N/A"
@@ -372,9 +372,9 @@ router.get("/drinks", async function (req, res, next) {
 		version: apiVersion,
 		drink_count: drinksCount[0][0].drink_count ? drinksCount[0][0].drink_count : 'Error in drink count',
 		links: {
-			get: "https://doc.gold.ac.uk/usr/717/api/drinks/get",
+			get: "https://doc.gold.ac.uk/usr/717/api/drinks/get?drink_id=",
 			get_info: "GET REQUEST // Required parameters: `drink_id` (INT)",
-			search: "https://doc.gold.ac.uk/usr/717/api/drinks/search",
+			search: "https://doc.gold.ac.uk/usr/717/api/drinks/search?keyword=",
 			search_info: "GET REQUEST // Required parameters: `keyword` (max length 64)",
 			list: "https://doc.gold.ac.uk/usr/717/api/drinks/list",
 			list_info: "GET REQUEST // Required parameters: N/A",
@@ -513,9 +513,9 @@ router.get("/ingredients", async function (req, res, next) {
 		version: apiVersion,
 		ingredient_count: ingrsCount[0][0].ingr_count,
 		links: {
-			get: "https://doc.gold.ac.uk/usr/717/api/ingredients/get",
+			get: "https://doc.gold.ac.uk/usr/717/api/ingredients/get?ingr_id=",
 			get_info: "GET REQUEST // Required parameters: `ingr_id` (INT)",
-			search: "https://doc.gold.ac.uk/usr/717/api/ingredients/search",
+			search: "https://doc.gold.ac.uk/usr/717/api/ingredients/search?keyword=",
 			search_info: "GET REQUEST // Required parameters: `keyword` (max length 64)",
 			list: "https://doc.gold.ac.uk/usr/717/api/ingredients/list",
 			list_info: "GET REQUEST // Required parameters: N/A",
@@ -643,9 +643,9 @@ router.get("/glasses", async function (req, res, next) {
 		version: apiVersion,
 		glass_count: glassesCount[0][0].glass_count,
 		links: {
-			get: "https://doc.gold.ac.uk/usr/717/api/glasses/get",
+			get: "https://doc.gold.ac.uk/usr/717/api/glasses/get?glass_id=",
 			get_info: "GET REQUEST // Required parameters: `glass_id` (INT)",
-			search: "https://doc.gold.ac.uk/usr/717/api/glasses/search",
+			search: "https://doc.gold.ac.uk/usr/717/api/glasses/search?keyword=",
 			search_info: "GET REQUEST // Required parameters: `keyword` (max length 32)",
 			list: "https://doc.gold.ac.uk/usr/717/api/glasses/list",
 			list_info: "GET REQUEST // Required parameters: N/A",
