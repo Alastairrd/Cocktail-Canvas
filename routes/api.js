@@ -163,13 +163,13 @@ router.post(
 
 //user get
 router.get("/users/get", async function (req, res, next) {
-	const menuId = req.sanitize(req.query.user_id);
+	const userId = req.query.user_id;
 	let userInfo;
 
 	try {
-		let menuSqlQuery = `CALL get_user(?)`;
+		let userSqlQuery = `CALL get_user(?)`;
 		userInfo = await new Promise((resolve, reject) => {
-			db.query(menuSqlQuery, menuId, (error, results) => {
+			db.query(userSqlQuery, userId, (error, results) => {
 				if (error) {
 					reject(error);
 				} else {
@@ -188,11 +188,18 @@ router.get("/users/get", async function (req, res, next) {
 });
 
 //user search
-router.get("/users/search", async function (req, res, next) {
+router.get("/users/search", [check("keyword").trim().escape()] ,async function (req, res, next) {
 	let sqlquery = `CALL search_for_user(?)`;
+	let keyword;
+	if(!req.query.keyword || req.query.keyword.length < 1){
+		keyword = " "
+	} else {
+		keyword = req.query.keyword;
+	}
+
 
 	results = await new Promise((resolve, reject) => {
-		db.query(sqlquery, req.sanitize(req.query.keyword), (error, results) => {
+		db.query(sqlquery, keyword, (error, results) => {
 			if (error) {
 				reject(error);
                 res.json({error: error});
@@ -513,9 +520,9 @@ router.get("/ingredients", async function (req, res, next) {
 		version: apiVersion,
 		ingredient_count: ingrsCount[0][0].ingr_count,
 		links: {
-			get: "https://doc.gold.ac.uk/usr/717/api/ingredients/get?ingr_id= ",
+			get: "https://doc.gold.ac.uk/usr/717/api/ingredients/get?ingr_id=",
 			get_info: "GET REQUEST // Required parameters: `ingr_id` (INT)",
-			search: "https://doc.gold.ac.uk/usr/717/api/ingredients/search?keyword= ",
+			search: "https://doc.gold.ac.uk/usr/717/api/ingredients/search?keyword=",
 			search_info: "GET REQUEST // Required parameters: `keyword` (max length 64)",
 			list: "https://doc.gold.ac.uk/usr/717/api/ingredients/list",
 			list_info: "GET REQUEST // Required parameters: N/A",
