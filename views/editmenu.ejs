@@ -6,6 +6,7 @@
 		<script src="/editscripts.js"></script>
 	</head>
 	<body>
+		<!--top navigation bar, with reactive login/logout-->
 		<nav class="topnav">
 			<ul>
 			  <li><a href="../"><%=appData.appName%></a></li>
@@ -31,7 +32,9 @@
 				<div id="error-container" class="flex-container centred full-width">
 				</div>
 			</div>
+			<!--divide page into two columns-->
 			<div id="two-columns">
+				<!--left for custom cocktail and existing menu-->
 				<div id="column-1" class="box-left">
 					<div id="add-list-container">
 						<div id="add-div">
@@ -93,6 +96,7 @@
 								<input id="add-cocktail-button" class="basic-button" type="submit" value="Add cocktail to menu" />
 							</form>
 						</div>
+						<!--existing cocktails in menu-->
 						<div id="current-list-div" class="edit-menu-div">
 							<ul>
 								<% for(i=0; i<drinkList.length; i++) { %>
@@ -123,6 +127,7 @@
 						</div>
 					</div>
 				</div>
+				<!--right for external API search and internal DB search and search results-->
 				<div id="column-2" class="box-right">
 					<!--cocktail db API search section-->
 						<div class="search-div">
@@ -142,16 +147,11 @@
 								<button class="basic-button" type="submit">Search</button>
 							</form>
 						</div>
+						<!--containing search results from api or db-->
 						<div id="result-list-container">
 					
 						</div>
 				</div>
-			</div>
-
-			<!--section for listing current menu and adding a custom cocktail-->
-			<div id="edit-container">
-				
-				
 			</div>
 		</main>
 	</body>

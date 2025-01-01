@@ -4,10 +4,12 @@ const bcrypt = require("bcrypt");
 const router = express.Router();
 const { check, validationResult } = require("express-validator");
 
+//register page
 router.get("/register", function (req, res, next) {
 	res.render("register.ejs", { errors: [], user: req.session.user });
 });
 
+//login page
 router.get("/login", function (req, res, next) {
 	let sessionData = {
 		loginFailed: false,
@@ -17,6 +19,7 @@ router.get("/login", function (req, res, next) {
 	res.render("login.ejs", sessionData);
 });
 
+//login route handler for login request
 router.post("/login", async function (req, res, next) {
 	//variable set up for login validation
 	const username = req.body.username;

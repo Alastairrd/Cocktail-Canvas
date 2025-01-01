@@ -5,6 +5,7 @@
     <link rel="stylesheet"  type="text/css" href="/main.css" />
   </head>
   <body>
+    <!--top navigation bar, with reactive login/logout-->
     <nav class="topnav">
       <ul>
         <li><a href="../"><%=appData.appName%></a></li>
@@ -23,10 +24,11 @@
       </ul>
     </nav>
     <main>
-      <div>
-        <h1 class="heading">Registered for <%=appData.appName%></h1>
-        <p><%=message%></p>
-        <p>We hope you enjoy using Cocktail Canvas, happy menu making!</p>
+      <!--registration message-->
+      <div class="flex-container centred">
+        <h1 class="heading full-width">Registered for <%=appData.appName%></h1>
+        <p class="full-width"><%=message%></p>
+        <p class="full-width">We hope you enjoy using Cocktail Canvas, happy menu making!</p>
       </div>
         <hr>
       </div>

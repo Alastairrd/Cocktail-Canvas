@@ -3,11 +3,13 @@ const express = require("express");
 const router = express.Router();
 const { check, validationResult } = require("express-validator");
 
+//view menu page
 router.get("/view", async function (req, res, next) {
 	const menuId = req.query.menuId;
 	let results;
 	let menuInfo;
 
+	//first get menu based on id
 	try {
 		let menuSqlQuery = `CALL get_menu(?)`;
 		menuInfo = await new Promise((resolve, reject) => {
@@ -20,6 +22,7 @@ router.get("/view", async function (req, res, next) {
 			});
 		});
 
+		//get drinks assosicated with menu
 		menuSqlQuery = `CALL get_current_drink_list(?)`;
 		results = await new Promise((resolve, reject) => {
 			db.query(menuSqlQuery, menuId, (error, results) => {
@@ -36,6 +39,7 @@ router.get("/view", async function (req, res, next) {
 	}
 
 	//initialise a drinkList for holding objects
+	//turns drink sql row data into object featuring lists for ingredients and measurements for ease of html display
 	let resDrinkList = [];
 	results[0].forEach((entry) => {
 		//find if there is an object in drink list with a matching id already
@@ -69,9 +73,10 @@ router.get("/view", async function (req, res, next) {
 		menu_desc: menuInfo[0][0].menu_desc,
 		user: req.session.user,
 	};
-	res.render("viewmenu.ejs", menuData);
+	res.render("viewmenu.ejs", menuData); //render page with all necessary data
 });
 
+//create menu page
 router.get("/create", redirectLogin, function (req, res, next) {
 	let sessionData = {
 		user: req.session.user,
@@ -81,6 +86,7 @@ router.get("/create", redirectLogin, function (req, res, next) {
 	res.render("createmenu.ejs", sessionData);
 });
 
+//route for handling creation of a menu
 router.post(
 	"/create",
 	redirectLogin,
@@ -120,13 +126,16 @@ router.post(
 			});
 		});
 
-		res.redirect("../menus/editlist");
+		res.redirect("../menus/editlist"); //redirect to list of menus to edit
 	}
 );
 
+//edit menu page, allows adding custom cocktails, searching api and adding results to menu,
+//as well as searching internal db for existing drinks to add to menu
 router.get("/editmenu", redirectLogin, async function (req, res, next) {
 	const menuId = req.query.menu_id;
 
+	//first check menu belongs to user
 	const sqlQuery = `CALL check_menu_against_user(?,?)`;
 	let params = [menuId, req.session.user_id];
 	checkResults = await new Promise((resolve, reject) => {
@@ -148,7 +157,7 @@ router.get("/editmenu", redirectLogin, async function (req, res, next) {
 		return;
 	}
 
-	//else is owner of menu
+	//else is owner of menu, get drinks list for menu
 	const menuSqlQuery = `CALL get_current_drink_list(?)`;
 	results = await new Promise((resolve, reject) => {
 		db.query(menuSqlQuery, menuId, (error, results) => {
@@ -161,6 +170,7 @@ router.get("/editmenu", redirectLogin, async function (req, res, next) {
 	});
 
 	//initialise a drinkList for holding objects
+	//turns drink sql row data into object featuring lists for ingredients and measurements for ease of html display
 	let resDrinkList = [];
 	results[0].forEach((entry) => {
 		//find if there is an object in drink list with a matching id already
@@ -191,15 +201,15 @@ router.get("/editmenu", redirectLogin, async function (req, res, next) {
 		drinkList: resDrinkList,
 		menu_id: menuId,
 		user: req.session.user,
-		errors: []
+		errors: [],
 	};
-	res.render("editmenu.ejs", menuData);
+	res.render("editmenu.ejs", menuData); //render editmenu page with relevant data
 });
 
+//list of menus to edit
 router.get("/editlist", redirectLogin, async function (req, res, next) {
-	//user id
 	const userId = req.session.user_id;
-	const sqlquery = `CALL get_menu_list_for_user(?)`;
+	const sqlquery = `CALL get_menu_list_for_user(?)`; //gets all menus owned by logged in user
 
 	//query db for current menu list
 	results = await new Promise((resolve, reject) => {
@@ -218,11 +228,13 @@ router.get("/editlist", redirectLogin, async function (req, res, next) {
 	res.render("editlist.ejs", menuListData);
 });
 
-//route for adding a cocktail to menu either from custom creation or DB
+//route for adding a cocktail to menu either from custom creation, API, or internal DB
+//returns json results handled by functions
 router.post(
 	"/add-cocktail-to-menu",
 	redirectLogin,
 	[
+		//validate drink name
 		check("drink_name")
 			.notEmpty()
 			.withMessage("Drink name must not be empty.")
@@ -231,6 +243,7 @@ router.post(
 			.isLength({ max: 64 })
 			.withMessage("Drink name cannot be more than 64 characters."),
 
+		//validate method
 		check("drink_method")
 			.notEmpty()
 			.withMessage("Method must not be empty.")
@@ -239,6 +252,7 @@ router.post(
 			.isLength({ max: 512 })
 			.withMessage("Method cannot be more than 512 characters."),
 
+		//validate glass
 		check("drink_glass")
 			.notEmpty()
 			.withMessage("Glass must not be empty.")
@@ -277,9 +291,11 @@ router.post(
 
 		//check ingredients and measurements have same length
 		check().custom((value, { req }) => {
-
 			//check they are arrays first before length comparison
-			if (!Array.isArray(req.body.ingredients) || !Array.isArray(req.body.measurements)) {
+			if (
+				!Array.isArray(req.body.ingredients) ||
+				!Array.isArray(req.body.measurements)
+			) {
 				return true;
 			}
 
@@ -295,33 +311,38 @@ router.post(
 		//validation errors
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
-			const menuId = req.body.menu_id;
-			const sqlQuery = `CALL check_menu_against_user(?,?)`;
-			let params = [menuId, req.session.user_id];
-			checkResults = await new Promise((resolve, reject) => {
-				db.query(sqlQuery, params, (error, results) => {
-					if (error) {
-						reject(error);
-					} else {
-						resolve(results);
-					}
-				});
-			});
-
-			//if not owner of menu
-			if (!checkResults[0][0].is_owner) {
-				res.status(400).json({ errors: [{msg: "Menu does not belong to this user.", path: "menu"}] });
-				return;
-			}
-
 			res.status(400).json({ errors: errors.array() });
 			return;
 		}
 
+		//also check menu ownership
+		const sqlQuery = `CALL check_menu_against_user(?,?)`;
+		const menuParams = [req.body.menu_id, req.session.user_id];
+		checkResults = await new Promise((resolve, reject) => {
+			db.query(sqlQuery, menuParams, (error, results) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(results);
+				}
+			});
+		});
+
+		//if not owner of menu
+		if (!checkResults[0][0].is_owner) {
+			res.status(400).json({
+				errors: [
+					{ msg: "Menu does not belong to this user.", path: "menu" },
+				],
+			});
+			return;
+		}
+
+		//check where cocktail is coming from
 		try {
 			//if cocktail exists in db already
 			if (req.body.drink_id != -1) {
-				const sqlquery = `CALL add_existing_cocktail_to_menu(?, ?)`;
+				const sqlquery = `CALL add_existing_drink_to_menu(?, ?)`;
 				const params = [req.body.drink_id, req.body.menu_id];
 
 				results = await new Promise((resolve, reject) => {
@@ -340,7 +361,9 @@ router.post(
 			}
 		} catch (error) {
 			console.log(error);
-			res.status(400).json({ errors: [{msg: error.message, path: "internal"}] });
+			res.status(400).json({
+				errors: [{ msg: error.message, path: "internal" }],
+			});
 			return;
 		}
 
@@ -356,8 +379,8 @@ router.post(
 		});
 		const menuId = req.body.menu_id;
 
-		//variables for query
-		const sqlquery = `CALL add_cocktail_from_db(?,?,?,?,?,?)`;
+		//variables for adding cocktail query
+		const sqlquery = `CALL add_drink_to_db(?,?,?,?,?,?)`;
 		const params = [
 			cocktailName,
 			cocktailMethod,
@@ -371,7 +394,9 @@ router.post(
 				if (error) {
 					console.log(error);
 					reject(error);
-					res.status(400).json({ errors: [{msg: error.message, path: "internal"}] });
+					res.status(400).json({
+						errors: [{ msg: error.message, path: "internal" }],
+					});
 				} else {
 					resolve(results);
 				}
@@ -382,6 +407,7 @@ router.post(
 	}
 );
 
+//remove a drink from menu
 router.post(
 	"/remove-cocktail-from-menu",
 	redirectLogin,
@@ -389,6 +415,7 @@ router.post(
 		try {
 			const menuId = req.body.menu_id;
 
+			//check menu ownership
 			let sqlQuery = `CALL check_menu_against_user(?,?)`;
 			let params = [menuId, req.session.user_id];
 			checkResults = await new Promise((resolve, reject) => {
@@ -407,6 +434,7 @@ router.post(
 				return;
 			}
 
+			//remove based on drink and menu id
 			sqlQuery = `CALL remove_drink_from_menu(?, ?)`;
 			params = [req.body.drink_id, req.body.menu_id];
 			//query db for current menu list

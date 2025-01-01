@@ -6,6 +6,7 @@
 		<script src="/listscripts.js"></script>
 	</head>
 	<body>
+		<!--top navigation bar, with reactive login/logout-->
 		<nav class="topnav">
 			<ul>
 			  <li><a href="../"><%=appData.appName%></a></li>
@@ -36,19 +37,19 @@
 					<p>Menu description: <%= menu_desc ? menu_desc : 'N/A' %></p>
 				</div>
 					<div id="current-list-div" class="view-menu-div">
+						<!--error handlings-->
 					  <% if (drinkList.length < 1) { %> 
 						<p>No drink data found for menu.</p>
 					  <% } else { %>
 						<ul>
+							<!--drinks list for menu-->
 						  <% for (let i = 0; i < drinkList.length; i++) { %>
 							<li>
-							  <!-- Match the same structure / classes / IDs from your original snippet -->
 							  <div 
 								id="drink-div<%= i %>" 
 								class="cocktail-item-div" 
 								activeNow="0"
 							  >
-								<!-- drink name -->
 								<p class="cocktail-item-name">
 								  <%= drinkList[i].drink_name %>
 								</p>

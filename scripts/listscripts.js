@@ -1,3 +1,4 @@
+  //toggle list page from one section to another
   function toggleList(activeDiv, activeButton) {
     const divArray = [
       "user-list-div",
@@ -33,10 +34,11 @@
     }
   }
 
+  //toggles a drink from displaying only name to all info, extending it
   function toggleCocktail(selectedDrink, showButtonId, hideButtonId){
     let item = document.getElementById(selectedDrink)
 
-    if(item.getAttribute("activeNow") == 0){
+    if(item.getAttribute("activeNow") == 0){ //if not active, make active
         let method = document.getElementById(selectedDrink).querySelector('.cocktail-item-method')
         method.setAttribute("style", "display: inline")
         let glass = document.getElementById(selectedDrink).querySelector('.cocktail-item-glass')
@@ -48,7 +50,7 @@
         let hideButton = document.getElementById(hideButtonId)
         hideButton.setAttribute("style", "display: inline-block")
         item.setAttribute("activeNow", 1)
-    } else {
+    } else { //return to inactive
         let method = document.getElementById(selectedDrink).querySelector('.cocktail-item-method')
         method.setAttribute("style", "display: none")
         let glass = document.getElementById(selectedDrink).querySelector('.cocktail-item-glass')

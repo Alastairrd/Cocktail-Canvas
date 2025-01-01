@@ -5,8 +5,8 @@
 		<link rel="stylesheet" type="text/css" href="/main.css" />
 	</head>
 	<body>
-		<!--top nav header with login bar based on session data-->
 		<header>
+      <!--top navigation bar, with reactive login/logout-->
 			<nav class="topnav">
 				<ul>
 					<li>
@@ -31,6 +31,7 @@
 			</nav>
 		</header>
 		<main>
+      <!--headings-->
 			<div class="flex-container centred">
 				<% if(user != null) { %>
 				<h2 class="subheading full-width">Welcome back <%=user%>!</h2>
@@ -46,6 +47,7 @@
 					Below is a directory of a few things you can do here on
 					Cocktail Canvas, enjoy!
 				</p>
+        <!--list of links from index page-->
 				<p  class="basic-button full-width"  ><a href="about">About <%=appData.appName%></a></p>
 				<p  class="basic-button full-width"  ><a href="list">List </a></p>
 				<p  class="basic-button full-width"  ><a href="search">Search </a></p>

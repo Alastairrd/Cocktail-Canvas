@@ -6,6 +6,7 @@
     <script src="/listscripts.js"></script>
   </head>
   <body>
+    <!--top navigation bar, with reactive login/logout-->
     <nav class="topnav">
       <ul>
         <li><a href="./"><%=appData.appName%></a></li>
@@ -35,6 +36,7 @@
           <div id="user-list-div" class="list-div" style="display: block;">
             <p class="stat-heading">Total users: <%= results.length %></p>
             <ul>
+              <!--user search results-->
               <% for (let i = 0; i < results.length; i++) { %>
                 <li>
                   <div class="user-div">
@@ -67,6 +69,7 @@
           <div id="menu-list-div" class="list-div" style="display: block;">
             <p class="stat-heading">Total menus: <%= results.length %></p>
             <ul>
+              <!--menu search results-->
               <% for (let i = 0; i < results.length; i++) { %>
                 <li>
                   <a
@@ -92,6 +95,7 @@
           <div id="drink-list-div" class="list-div" style="display: block;">
             <p class="stat-heading">Total drinks: <%= results.length %></p>
             <ul>
+              <!--drink search results-->
               <% for (let i = 0; i < results.length; i++) { %>
                 <li>
                   <div

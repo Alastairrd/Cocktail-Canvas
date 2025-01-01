@@ -1,3 +1,4 @@
+//if user search selected, edit elements to reflect it
 function setUserSearch(){
     let input = document.getElementById("searchQuery")
     input.setAttribute("placeholder", "Type a username to search for...")
@@ -14,7 +15,7 @@ function setUserSearch(){
     label.setAttribute("style", "display: block")
     label.innerText = "Search for user: "
 }
-
+//if menu search selected, edit elements to reflect it
 function setMenuSearch(){
     let input = document.getElementById("searchQuery")
     input.setAttribute("placeholder", "Type a menu name to search for...")
@@ -31,7 +32,7 @@ function setMenuSearch(){
     label.setAttribute("style", "display: block")
     label.innerText = "Search for menu: "
 }
-
+//if drink search selected, edit elements to reflect it
 function setDrinkSearch(){
     let input = document.getElementById("searchQuery")
     input.setAttribute("placeholder", "Type a drink name to search for...")

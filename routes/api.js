@@ -141,12 +141,19 @@ router.post(
 						else
 							result =
 								"Hello " +
-								req.sanitize(req.body.first) +
+								req.body.first +
 								" " +
-								req.sanitize(req.body.last) +
+								req.body.last +
 								" you are now registered!  We will send an email to you at " +
 								req.body.email
-						res.json({result_message: result});
+						res.json({result_message: result,
+							result: "success",
+							username: req.body.username,
+							firstName: req.body.first,
+							lastName: req.body.last,
+							email: req.body.email,
+							company: req.body.company,
+						});
 					});
 				}
 			);
@@ -345,7 +352,7 @@ router.get("/menus/list", async function (req, res, next) {
 // DRINKS  //
 /////////////
 
-//menu base listing all links
+//drink base listing all links
 router.get("/drinks", async function (req, res, next) {
 
 	//return count of all drinks
@@ -486,7 +493,7 @@ router.get("/drinks/listbycount", async function (req, res, next) {
 // INGREDIENTS //
 /////////////////
 
-//menu base listing all links
+//ingr base listing all links
 router.get("/ingredients", async function (req, res, next) {
 
 	//return count of all ingrs
@@ -616,10 +623,10 @@ router.get("/ingredients/listbycount", async function (req, res, next) {
 // GLASS //
 /////////////////
 
-//menu base listing all links
+//glass base listing all links
 router.get("/glasses", async function (req, res, next) {
 
-	//return count of all ingrs
+	//return count of all glasses
 	const ingrsCount = await new Promise((resolve, reject) => {
 		db.query(`CALL get_glass_count()`, (error, results) => {
 			if (error) {
@@ -631,7 +638,7 @@ router.get("/glasses", async function (req, res, next) {
 		});
 	});
 
-	//list of routes
+	//list of routes for glasses
 	let apiData = {
 		version: apiVersion,
 		glass_count: glassesCount[0][0].glass_count,
@@ -650,7 +657,7 @@ router.get("/glasses", async function (req, res, next) {
 	res.json(apiData);
 });
 
-//get ingredients
+//get glass
 router.get("/glasses/get", async function (req, res, next) {
 	const glassId = req.sanitize(req.query.glass_id);
 	let glassInfo;
@@ -658,7 +665,7 @@ router.get("/glasses/get", async function (req, res, next) {
 	try {
 		let glassSqlQuery = `CALL get_glass(?)`;
 		glassInfo = await new Promise((resolve, reject) => {
-			db.query(ingrSqlQuery, ingrId, (error, results) => {
+			db.query(glassSqlQuery, glassId, (error, results) => {
 				if (error) {
 					reject(error);
 				} else {
@@ -676,7 +683,7 @@ router.get("/glasses/get", async function (req, res, next) {
 	res.json(apiData);
 });
 
-//search ingredients
+//search glasses
 router.get("/glasses/search", async function (req, res, next) {
 	let sqlquery = `CALL search_for_glass(?)`;
 
@@ -698,7 +705,7 @@ router.get("/glasses/search", async function (req, res, next) {
 	});
 });
 
-//list all ingredients
+//list all glasses
 router.get("/glasses/list", async function (req, res, next) {
 	let sqlquery = `CALL get_all_glasses()`;
 
@@ -720,7 +727,7 @@ router.get("/glasses/list", async function (req, res, next) {
 	});
 });
 
-//returns all ingredients by how many times featured in drinks
+//returns all glasses by how many times featured in drinks
 router.get("/glasses/listbycount", async function (req, res, next) {
 	let sqlquery = `CALL list_glass_by_count()`;
     results = await new Promise((resolve, reject) => {

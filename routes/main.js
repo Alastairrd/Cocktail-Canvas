@@ -3,16 +3,17 @@ const express = require("express");
 const router = express.Router();
 
 // Handle our routes
+//index page
 router.get("/", function (req, res, next) {
-	//assign this new databse data to the forumData object being passed to page
 	let sessionData = {
 		user: req.session.user,
 	};
 	res.render("index.ejs", sessionData);
 });
 
+//list page, display lists for users,drinks,menus
 router.get("/list", async function (req, res, next) {
-	let listData = {
+	let listData = { //initialise
 		users: [],
 		menus: [],
 		drinkList: [],
@@ -23,6 +24,7 @@ router.get("/list", async function (req, res, next) {
 	};
 
 	try {
+		//first get counts for all lists
 		//return count of all users
 		const usersCount = await new Promise((resolve, reject) => {
 			db.query(`CALL get_user_count()`, (error, results) => {
@@ -62,6 +64,7 @@ router.get("/list", async function (req, res, next) {
 		});
 		listData.drink_count = drinksCount[0][0].drink_count
 
+		//then get all list data
 		let sqlquery = "CALL get_all_users()"; // query database to get all the users
 		const users = await new Promise((resolve, reject) => {
 			db.query(sqlquery, (error, results) => {
@@ -100,6 +103,7 @@ router.get("/list", async function (req, res, next) {
 				} else {
 					resolve(results);
 
+					//turns drink sql row data into object featuring lists for ingredients and measurements for ease of html display
 					results[0].forEach((entry) => {
 						//find if there is an object in drink list with a matching id already
 						let existingDrink = resDrinkList.find(
@@ -139,6 +143,7 @@ router.get("/list", async function (req, res, next) {
 	
 });
 
+//search page
 router.get("/search",function (req, res, next) {
 	let sessionData = {
 		user: req.session.user,
@@ -146,6 +151,7 @@ router.get("/search",function (req, res, next) {
 	res.render("search.ejs", sessionData);
 });
 
+//page for search results
 router.post("/searchresult", async function (req, res, next) {
 	let searchtype = req.body.type;
 	let sqlquery = "";
@@ -154,6 +160,7 @@ router.post("/searchresult", async function (req, res, next) {
 		user: req.session.user,
 	};
 
+	//type of search dictates query
 	if (searchtype == "user") {
 		sqlquery = `CALL search_for_user(?)`;
 	} else if (searchtype == "menu") {
@@ -164,6 +171,7 @@ router.post("/searchresult", async function (req, res, next) {
 		res.render("error.ejs", { user: req.session.user, message: "Unknown search type." });
 	}
 
+	//once we have our query, make appropriate search
 	if (sqlquery != "") {
 		params = req.body.keyword;
 		const results = await new Promise((resolve, reject) => {
@@ -180,6 +188,7 @@ router.post("/searchresult", async function (req, res, next) {
 
 					if (searchtype == "drink") {
 						//initialise a drinkList for holding objects
+						//turns drink sql row data into object featuring lists for ingredients and measurements for ease of html display
 						let resDrinkList = [];
 						results[0].forEach((entry) => {
 							//find if there is an object in drink list with a matching id already
@@ -210,13 +219,14 @@ router.post("/searchresult", async function (req, res, next) {
 
 					responseData = Object.assign({}, resultData, sessionData);
 
-					res.render("searchresult.ejs", responseData);
+					res.render("searchresult.ejs", responseData); //render page with relevant search data
 				}
 			});
 		});
 	}
 });
 
+//about page
 router.get("/about", async function (req, res, next) {
 	//return count of all users
 	const users = await new Promise((resolve, reject) => {
@@ -240,7 +250,7 @@ router.get("/about", async function (req, res, next) {
 		});
 	});
 
-	//return count of all menus
+	//return count of all drink
 	const drinks = await new Promise((resolve, reject) => {
 		db.query(`CALL get_drink_count()`, (error, results) => {
 			if (error) {
@@ -251,6 +261,7 @@ router.get("/about", async function (req, res, next) {
 		});
 	});
 
+	//stats for display on about page
 	let aboutData = {
 		user_count: users[0][0].user_count,
 		menu_count: menus[0][0].menu_count,
@@ -261,6 +272,7 @@ router.get("/about", async function (req, res, next) {
 	res.render("about.ejs", aboutData);
 });
 
+//logout page, removes session
 router.get("/logout", redirectLogin, (req, res) => {
 	req.session.destroy((err) => {
 		if (err) {

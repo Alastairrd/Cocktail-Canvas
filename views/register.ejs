@@ -5,6 +5,7 @@
     <link rel="stylesheet"  type="text/css" href="/main.css" />
   </head>
   <body>
+    <!--top navigation bar, with reactive login/logout-->
     <nav class="topnav">
       <ul>
         <li><a class="active" href="../"><%=appData.appName%></a></li>
@@ -23,14 +24,17 @@
       </ul>
     </nav>
     <main>
+      <!--headings-->
       <div class="flex-container centred">
         <h1 class="heading full-width" >Register for <%=appData.appName%></h1>
+        <!--error handling-->
         <% if(errors && errors.length > 0) { %>
           <% for(let i=0; i<errors.length; i++) { %>
             <p class="full-width">Error: <%=errors[i].msg%> at (<%=errors[i].path%>)</p>
           <% } %>
         <% } %>
-        <form method="POST" action="register" autocomplete="off">
+        <!--registration form-->
+        <form method="POST" action="../../api/register" autocomplete="off">
           
           <p>Fields marked with * are required.</p><br>
           <p>* Username: <input id="username" type="text" name="username" value="" minlength ="8" maxlength="16" required/></p>

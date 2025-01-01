@@ -28,18 +28,20 @@
     </header>
     <main>
       <div class="flex-container centred">
-		    <!--list page heading-->
+		    <!--search page heading-->
         <div class="full-width">
           <h1 class="heading">Search Cocktail Canvas:</p>
             <p class="subheading">What would you like to search for?</p>
         </div>
 
+        <!--buttons to toggle search mode-->
         <div class="list-button-div full-width">
           <button class="list-button" onclick="setUserSearch()">User</button>
           <button class="list-button" onclick="setMenuSearch()">Menu</button>
           <button class="list-button" onclick="setDrinkSearch()">Drink</button>
         </div>
 
+        <!--search form-->
         <form id="searchForm" method="POST" action="searchresult">
           <input id="type" name="type" value="" type="hidden">
           <label id="searchLabel" style="display: none;">Search for: </label>  

@@ -5,6 +5,7 @@
     <link rel="stylesheet"  type="text/css" href="/main.css" />
   </head>
   <body>
+    <!--top navigation bar, with reactive login/logout-->
     <nav class="topnav">
       <ul>
         <li><a href="../"><%=appData.appName%></a></li>
@@ -23,12 +24,13 @@
       </ul>
     </nav>
     <main>
-      
+      <!--headings-->
       <div class="flex-container centred">
         <div class="full-width"> 
           <h1 class="heading">List of your current menus: <%=appData.appName%></h1>
           <h2 class="subheading">Pick one of your menus to edit!</h2>
         </div>
+        <!--list of menus belonging to user-->
         <div id="menu-list-div" class="list-div">
           <ul>
             <%if(menuList.length < 1) { %>
@@ -39,6 +41,7 @@
                 </button>
               </form>
             <% } %>
+            <!--menu item with link and edit button-->
             <% menuList.forEach(function(menu) { %>
               <li class="edit-menu-item">
                 <a

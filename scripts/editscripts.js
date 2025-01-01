@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		try {
 			const response = await fetch(
 				"../api/glasses/search?keyword=" +
-					encodeURIComponent(typedValue) //fetch ingredients from typed input
+					encodeURIComponent(typedValue) //fetch glasses from typed input
 			);
 
 			if (!response.ok) {
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			const dataList = document.getElementById("glassSuggestions");
 			dataList.innerHTML = "";
 
-			//fill with new ingredients from fetch
+			//fill with new glasses from fetch
 			data.glasses.forEach((item) => {
 				const option = document.createElement("option");
 				option.value = item.glass_name;
@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 
 	const addIngredientBtn = document.getElementById("add-ingredient-btn");
-
 	//add a new div for storing ingredients and measurements as a pair
 	addIngredientBtn.addEventListener("click", function () {
 		const ingredientPair = document.createElement("div");
@@ -157,6 +156,7 @@ async function onlineDBFetch(event) {
 	}
 }
 
+//fetching drinks from internal DB
 async function internalDBFetch(event) {
 	event.preventDefault(); //stop reload of page
 	//get keyword for cocktail seearch
@@ -185,8 +185,10 @@ async function internalDBFetch(event) {
 	}
 }
 
+//parse SQL data from internal DB
 function parseInternalDBResponse(data) {
 	//initialise a drinkList for holding objects
+	//turns drink sql row data into object featuring lists for ingredients and measurements for ease of html display
 	let resDrinkList = [];
 	data.drinks.forEach((entry) => {
 		//find if there is an object in drink list with a matching id already
@@ -215,8 +217,10 @@ function parseInternalDBResponse(data) {
 	return resDrinkList;
 }
 
+//parse JSON data from external API
 function parseCocktailApiResponse(apiResponse) {
 	//init the drink list for response
+	//turns drink api data into object featuring lists for ingredients and measurements for ease of html display
 	let resDrinkList = [];
 
 	if (apiResponse.drinks == null) {
@@ -273,24 +277,26 @@ function recursiveChildRemoval(element) {
 	}
 }
 
+//listing parsed drink results from either external API or internal DB on edit menu page
 function listParsedResults(resultList) {
 	//container for search list results
 	const listContainer = document.getElementById("result-list-container");
 	listContainer.classList.add("result-list-div");
 
-	//remove all child nodes
+	//remove all child nodes to clear list of previous results
 	recursiveChildRemoval(listContainer);
 
+	//objects for holding list
 	const ulObject = document.createElement("ul");
 	ulObject.classList.add("cocktail-list");
 	listContainer.appendChild(ulObject);
-
 	if (resultList.length < 1) {
 		let message = document.createElement("p");
-		message.innerText = "No results found.";
+		message.innerText = "No results found."; //if no results
 		ulObject.appendChild(message);
 	}
 
+	//list results
 	resultList.forEach((result) => {
 		const listItem = document.createElement("li");
 		//create parent div
@@ -374,7 +380,7 @@ function listParsedResults(resultList) {
 			//append list item to container
 			ingredientList.appendChild(ingrMeasureListItem);
 		}
-
+		//button for adding drink to menu
 		const addButton = document.createElement("button");
 		addButton.classList.add("basic-button", "full-width");
 		addButton.textContent = "Add to menu";
@@ -396,6 +402,7 @@ function listParsedResults(resultList) {
 	});
 }
 
+//prompt user for price entry before adding drink to a menu
 function getPrice(event) {
 	const userInput = prompt("Enter a price:");
 	if (isNaN(userInput)) {
@@ -412,6 +419,7 @@ function getPrice(event) {
 	}
 }
 
+//check internal DB for duplicate drink entry, return an id or -1 if no duplicate found
 async function duplicateDrinkCheck(data) {
 	//fetch drink search from drink_name
 	//url for api call
@@ -431,7 +439,7 @@ async function duplicateDrinkCheck(data) {
 			//parse results into object list
 			const parsedData = parseInternalDBResponse(DBdata);
 
-			let drinkId = -1;
+			let drinkId = -1; //-1 is default, means no duplicate
 			const paramList = [
 				"drink_method",
 				"drink_glass",
@@ -439,7 +447,7 @@ async function duplicateDrinkCheck(data) {
 				"measurements",
 			];
 			for (const entry of parsedData) {
-				let allMatch = true;
+				let allMatch = true; //will change to false if something doesn't match at any point
 
 				for (let i = 0; i < paramList.length; i++) {
 					const param = paramList[i];
@@ -462,12 +470,12 @@ async function duplicateDrinkCheck(data) {
 					}
 				}
 
-				if (allMatch) {
+				if (allMatch) { //return the id of the existing drink matching the one trying to be added
 					drinkId = entry.drink_id;
 					return drinkId;
 				}
 			}
-			return drinkId;
+			return drinkId; //else return -1 for no duplicate
 		} else {
 			console.log("http error: ", response.status); //log response if not
 		}
@@ -475,12 +483,9 @@ async function duplicateDrinkCheck(data) {
 	} catch (error) {
 		console.log("error in fetch: ", error);
 	}
-
-	//check duplicates in loop
-
-	//return drink_id or -1
 }
 
+//adding a cocktail to DB
 async function addCocktailToDBFromSearch(event, price) {
 	const button = event.target;
 	const parent = button.parentNode;
@@ -547,6 +552,7 @@ async function addCocktailToDBFromSearch(event, price) {
 	}
 }
 
+//removing a drink from menu
 async function removeDrinkFromMenu(event) {
 	const button = event.target;
 	const parent = button.parentNode;
@@ -595,6 +601,7 @@ async function removeDrinkFromMenu(event) {
 	}
 }
 
+//error handling on edit menu page
 document.addEventListener("DOMContentLoaded", function () {
 	document
 		.getElementById("add-cocktail-form")
@@ -622,6 +629,8 @@ document.addEventListener("DOMContentLoaded", function () {
 				}
 			});
 
+			//fetch call to original url ( add-cocktail-to-menu)
+			//handling json results and reloading page if needed or populating error handler
 			try {
 				const response = await fetch(form.action, {
 					method: "POST",
