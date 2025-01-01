@@ -611,5 +611,136 @@ router.get("/ingredients/listbycount", async function (req, res, next) {
 	});
 });
 
+
+/////////////////
+// GLASS //
+/////////////////
+
+//menu base listing all links
+router.get("/glasses", async function (req, res, next) {
+
+	//return count of all ingrs
+	const ingrsCount = await new Promise((resolve, reject) => {
+		db.query(`CALL get_glass_count()`, (error, results) => {
+			if (error) {
+				reject(error);
+				throw new Error(error)
+			} else {
+				resolve(results);
+			}
+		});
+	});
+
+	//list of routes
+	let apiData = {
+		version: apiVersion,
+		glass_count: glassesCount[0][0].glass_count,
+		links: {
+			get: "https://doc.gold.ac.uk/usr/717/api/glasses/get",
+			get_info: "GET REQUEST // Required parameters: `glass_id` (INT)",
+			search: "https://doc.gold.ac.uk/usr/717/api/glasses/search",
+			search_info: "GET REQUEST // Required parameters: `keyword` (max length 32)",
+			list: "https://doc.gold.ac.uk/usr/717/api/glasses/list",
+			list_info: "GET REQUEST // Required parameters: N/A",
+			listbycount: "https://doc.gold.ac.uk/usr/717/api/glasses/listbycount",
+			listbycount_info: "GET REQUEST // Required parameters: N/A"
+		}
+	}
+
+	res.json(apiData);
+});
+
+//get ingredients
+router.get("/glasses/get", async function (req, res, next) {
+	const glassId = req.sanitize(req.query.glass_id);
+	let glassInfo;
+
+	try {
+		let glassSqlQuery = `CALL get_glass(?)`;
+		glassInfo = await new Promise((resolve, reject) => {
+			db.query(ingrSqlQuery, ingrId, (error, results) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(results);
+				}
+			});
+		});
+	} catch (error) {
+		res.json({error: error.message})
+		return;
+	}
+
+	let apiData = {glass: glassInfo[0]}
+
+	res.json(apiData);
+});
+
+//search ingredients
+router.get("/glasses/search", async function (req, res, next) {
+	let sqlquery = `CALL search_for_glass(?)`;
+
+	results = await new Promise((resolve, reject) => {
+		db.query(sqlquery, req.query.keyword, (error, results) => {
+			if (error) {
+				reject(error);
+                res.json({error: error});
+			} else {
+				resolve(results);
+
+				let apiData = {
+					glasses: results[0],
+				};
+
+				res.json(apiData);
+			}
+		});
+	});
+});
+
+//list all ingredients
+router.get("/glasses/list", async function (req, res, next) {
+	let sqlquery = `CALL get_all_glasses()`;
+
+	results = await new Promise((resolve, reject) => {
+		db.query(sqlquery, (error, results) => {
+			if (error) {
+				reject(error);
+                res.send("Error in API request from database.")
+			} else {
+				resolve(results);
+
+				let apiData = {
+					glasses: results[0],
+				};
+
+				res.json(apiData);
+			}
+		});
+	});
+});
+
+//returns all ingredients by how many times featured in drinks
+router.get("/glasses/listbycount", async function (req, res, next) {
+	let sqlquery = `CALL list_glass_by_count()`;
+    results = await new Promise((resolve, reject) => {
+		db.query(sqlquery, (error, results) => {
+			if (error) {
+				reject(error);
+                res.send("Error in API request from database.")
+			} else {
+				resolve(results);
+
+				let apiData = {
+					glass_results: results[0],
+				};
+
+				res.json(apiData);
+			}
+		});
+	});
+});
+
 // Export the router object so index.js can access it
 module.exports = router;
+

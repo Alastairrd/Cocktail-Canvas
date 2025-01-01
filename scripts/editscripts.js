@@ -3,6 +3,51 @@ document.addEventListener("DOMContentLoaded", function () {
 	const ingredientsContainer = document.getElementById(
 		"ingredients-container"
 	);
+
+	//setting up suggestions from databases for glass input
+	const glassInput = document.getElementById("add_cocktail_glass")
+	const glassSuggestions = document.getElementById("glassSuggestions")
+	glassInput.setAttribute("list", "glassSuggestions");
+
+	//listener for glass input
+	glassInput.addEventListener("input", async function () {
+		const typedValue = glassInput.value.trim();
+
+		//if input is empty clear the list
+		if (typedValue == "") {
+			document.getElementById("glassSuggestions").innerHTML = "";
+			return;
+		}
+
+		try {
+			const response = await fetch(
+				"../api/glasses/search?keyword=" +
+					encodeURIComponent(typedValue) //fetch ingredients from typed input
+			);
+
+			if (!response.ok) {
+				throw new Error(
+					`Request failed with status: ${response.status}`
+				); //error if bad response
+			}
+
+			const data = await response.json(); //json response
+
+			//clear list of old suggestions
+			const dataList = document.getElementById("glassSuggestions");
+			dataList.innerHTML = "";
+
+			//fill with new ingredients from fetch
+			data.glasses.forEach((item) => {
+				const option = document.createElement("option");
+				option.value = item.glass_name;
+				dataList.appendChild(option);
+			});
+		} catch (error) {
+			console.error("Error fetching suggestions:", error);
+		}
+	});
+
 	const addIngredientBtn = document.getElementById("add-ingredient-btn");
 
 	//add a new div for storing ingredients and measurements as a pair
