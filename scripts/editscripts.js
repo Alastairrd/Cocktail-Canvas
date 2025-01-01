@@ -535,7 +535,7 @@ async function addCocktailToDBFromSearch(event, price) {
 			console.log(
 				"Cocktail data sent successfully, code: " + response.status
 			);
-			window.location.href = `/menus/editmenu?menu_id=${data.menu_id}`;
+			window.location.reload();
 		} else {
 			//if database request didnt go well
 			console.log(
@@ -584,7 +584,7 @@ async function removeDrinkFromMenu(event) {
 			console.log(
 				"Cocktail data removed successfully, code: " + response.status
 			);
-			window.location.href = `/menus/editmenu?menu_id=${data.menu_id}`;
+			window.location.reload();
 		} else {
 			//if database request didnt go well
 			console.log(
@@ -642,7 +642,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					const menu_id = form.querySelector(
 						'input[name="menu_id"]'
 					).value;
-					window.location.href = `/menus/editmenu?menu_id=${menu_id}`;
+					window.location.reload();
 				} else if (response.status == 400) {
 					const result = await response.json();
 					if (result.errors && Array.isArray(result.errors)) {
