@@ -77,8 +77,6 @@ router.get("/list", async function (req, res, next) {
 			});
 		});
 		listData.users = users[0]
-		console.log(listData.users[0]);
-		console.log(listData.users[0].email);
 
 		//return all menus
 		sqlquery = "CALL get_all_menus()";
