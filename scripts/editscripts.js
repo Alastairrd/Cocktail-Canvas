@@ -546,8 +546,11 @@ async function addCocktailToDBFromSearch(event, price) {
 					", text: " +
 					response.statusText
 			);
+			//reset error message container
 			let errorContainer = document.getElementById("error-container");
 			errorContainer.innerHTML = "";
+			
+			//display returned error message on page
 			const p = document.createElement("p");
 			p.classList.add("full-width");
 			const errorMessage = await response.text();

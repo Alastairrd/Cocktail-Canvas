@@ -10,6 +10,17 @@ function setUserSearch(){
 
     let button = document.getElementById("searchButton")
     button.setAttribute("style", "display: block")
+    
+
+    let userButton = document.getElementById("userButton")
+    userButton.setAttribute("activeNow", 1)
+    userButton.classList.add("activeNow")
+    let menuButton = document.getElementById("menuButton")
+    menuButton.setAttribute("activeNow", 0)
+    menuButton.classList.remove("activeNow")
+    let drinkButton = document.getElementById("drinkButton")
+    drinkButton.setAttribute("activeNow", 0)
+    drinkButton.classList.remove("activeNow")
 
     let label = document.getElementById("searchLabel")
     label.setAttribute("style", "display: block")
@@ -28,6 +39,16 @@ function setMenuSearch(){
     let button = document.getElementById("searchButton")
     button.setAttribute("style", "display: block")
 
+    let userButton = document.getElementById("userButton")
+    userButton.setAttribute("activeNow", 0)
+    userButton.classList.remove("activeNow")
+    let menuButton = document.getElementById("menuButton")
+    menuButton.setAttribute("activeNow", 1)
+    menuButton.classList.add("activeNow")
+    let drinkButton = document.getElementById("drinkButton")
+    drinkButton.setAttribute("activeNow", 0)
+    drinkButton.classList.remove("activeNow")
+
     let label = document.getElementById("searchLabel")
     label.setAttribute("style", "display: block")
     label.innerText = "Search for menu: "
@@ -44,6 +65,16 @@ function setDrinkSearch(){
 
     let button = document.getElementById("searchButton")
     button.setAttribute("style", "display: block")
+
+    let userButton = document.getElementById("userButton")
+    userButton.setAttribute("activeNow", 0)
+    userButton.classList.remove("activeNow")
+    let menuButton = document.getElementById("menuButton")
+    menuButton.setAttribute("activeNow", 0)
+    menuButton.classList.remove("activeNow")
+    let drinkButton = document.getElementById("drinkButton")
+    drinkButton.setAttribute("activeNow", 1)
+    drinkButton.classList.add("activeNow")
 
     let label = document.getElementById("searchLabel")
     label.setAttribute("style", "display: block")

@@ -15,6 +15,7 @@ router.get("/", async function (req, res, next) {
 			menus: "https://doc.gold.ac.uk/usr/717/api/menus",
 			drinks: "https://doc.gold.ac.uk/usr/717/api/drinks",
 			ingredients: "https://doc.gold.ac.uk/usr/717/api/ingredients",
+			glasses: "https://doc.gold.ac.uk/usr/717/api/glasses"
 		},
 	};
 
@@ -327,7 +328,7 @@ router.get(
 		} else {
 			keyword = req.query.keyword;
 		}
-		try {
+		try { //attempt to retrieve menu based on search query
 			let sqlquery = `CALL search_for_menu(?)`;
 
 			results = await new Promise((resolve, reject) => {
@@ -338,7 +339,7 @@ router.get(
 						resolve(results);
 
 						let apiData = {
-							menus: results[0],
+							menus: results[0], //extract results from db response
 						};
 
 						res.json(apiData);
@@ -346,7 +347,7 @@ router.get(
 				});
 			});
 		} catch (error) {
-			res.json({ error: error.message });
+			res.json({ error: error.message }); //send back error message
 			return;
 		}
 	}

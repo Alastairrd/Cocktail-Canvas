@@ -439,10 +439,10 @@ a .menu-div:hover {
 }
 
 .result-list-div ul.cocktail-list{
-list-style-type: none;
-margin-left: 3vw;
-padding: 0;
-width: 100%;
+	list-style-type: none;
+	margin-left: 3vw;
+	padding: 0;
+	width: 100%;
 }
 
 .flex-row {
